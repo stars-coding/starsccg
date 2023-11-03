@@ -26,10 +26,17 @@ public class DynamicGenerator {
      * @throws TemplateException
      */
     public static void main(String[] args) throws IOException, TemplateException {
+
+        /*
         // 顶级项目的根路径
         String projectPath = System.getProperty("user.dir");
         String inputPath = projectPath + File.separator
                 + "starsccg-basic" + File.separator + "src/main/resources/templates/MainTemplate.java.ftl";
+        */
+
+        // 顶级项目的根路径
+        String projectPath = System.getProperty("user.dir");
+        String inputPath = projectPath + File.separator + "src/main/resources/templates/MainTemplate.java.ftl";
         String outputPath = projectPath + File.separator + "MainTemplate.java";
         // 创建数据模型对象
         MainTemplateConfig mainTemplateConfig = new MainTemplateConfig();

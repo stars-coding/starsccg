@@ -39,18 +39,18 @@ public class MainGenerator {
      * @throws IOException
      */
     public static void doGenerate(Object model) throws IOException, TemplateException {
-        // 顶级项目的根路径
+        // 模块单独打开时，为当前模块根路径
         String projectPath = System.getProperty("user.dir");
+        // 顶级项目的根路径
+        File parentFile = new File(projectPath).getParentFile();
 
         // 生成静态文件
-        String inputStaticFilePath = projectPath + File.separator
-                + "starsccg-demo-projects" + File.separator + "acm-template";
+        String inputStaticFilePath = new File(parentFile, "starsccg-demo-projects/acm-template").getAbsolutePath();
         String outputStaticFilePath = projectPath;
         StaticGenerator.copyFilesByRecursive(inputStaticFilePath, outputStaticFilePath);
 
         // 生成动态文件
-        String inputDynamicFilePath = projectPath + File.separator
-                + "starsccg-basic" + File.separator + "src/main/resources/templates/MainTemplate.java.ftl";
+        String inputDynamicFilePath = projectPath + File.separator + "src/main/resources/templates/MainTemplate.java.ftl";
         String outputDynamicFilePath = outputStaticFilePath + File.separator
                 + "acm-template/src/com/stars/acm/MainTemplate.java";
         DynamicGenerator.doGenerate(inputDynamicFilePath, outputDynamicFilePath, model);

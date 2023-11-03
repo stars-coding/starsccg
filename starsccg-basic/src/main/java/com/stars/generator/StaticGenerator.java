@@ -23,10 +23,20 @@ public class StaticGenerator {
      * @param args
      */
     public static void main(String[] args) {
+
+        /*
         // 顶级项目的根路径
         String projectPath = System.getProperty("user.dir");
         // 输入路径（动态获取系统路径分隔符）-绝对路径
         String inputPath = projectPath + File.separator + "starsccg-demo-projects" + File.separator + "acm-template";
+        */
+
+        // 模块单独打开时，为当前模块根路径
+        String projectPath = System.getProperty("user.dir");
+        // 顶级项目的根路径
+        File parentFile = new File(projectPath).getParentFile();
+        // 输入路径（动态获取系统路径分隔符）-绝对路径
+        String inputPath = new File(parentFile, "starsccg-demo-projects/acm-template").getAbsolutePath();
         // 输出路径-绝对路径
         String outputPath = projectPath;
         // 复制
