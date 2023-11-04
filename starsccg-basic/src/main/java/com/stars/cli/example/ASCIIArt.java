@@ -4,8 +4,13 @@ import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
-// some exports omitted for the sake of brevity
 
+/**
+ * 引入 picocli 测试
+ *
+ * @author stars
+ * @version 1.0
+ */
 @Command(name = "ASCIIArt", version = "ASCIIArt 1.0", mixinStandardHelpOptions = true)
 public class ASCIIArt implements Runnable {
 
