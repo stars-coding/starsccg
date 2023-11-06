@@ -9,6 +9,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Locale;
 
 /**
  * 动态文件生成器
@@ -65,10 +66,12 @@ public class DynamicGenerator {
         configuration.setDirectoryForTemplateLoading(templateDir);
 
         // 设置模板文件使用的字符集
-        configuration.setDefaultEncoding("utf-8");
+        configuration.setDefaultEncoding("UTF-8");
+        configuration.setEncoding(Locale.getDefault(), "UTF-8");
 
         // 创建模板对象，加载指定模板
         String templateName = new File(inputPath).getName();
+//        Template template = configuration.getTemplate(templateName);
         Template template = configuration.getTemplate(templateName, "UTF-8");
 
         // 创建数据模型
