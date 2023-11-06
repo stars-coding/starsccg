@@ -3,7 +3,7 @@ package com.stars.acm;
 import java.util.Scanner;
 
 /**
- * ACM ÊäÈëÄ£°å£¨¶àÊıÖ®ºÍ£©
+ * ACM è¾“å…¥æ¨¡æ¿ï¼ˆå¤šæ•°ä¹‹å’Œï¼‰
  *
  * @author stars
  */
@@ -12,23 +12,25 @@ public class MainTemplate {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
+        while (scanner.hasNext()) {
 
-            // ¶ÁÈ¡ÊäÈëµÄÔªËØ¸öÊı
+            // è¯»å–è¾“å…¥çš„å…ƒç´ ä¸ªæ•°
             int n = scanner.nextInt();
-            // ´´½¨Êı×é
+            // åˆ›å»ºæ•°ç»„
             int[] arr = new int[n];
-            // ¶ÁÈ¡Êı×é
+            // è¯»å–æ•°ç»„
             for (int i = 0; i < n; i++) {
                 arr[i] = scanner.nextInt();
             }
-            // ¼ÆËãÊı×éÔªËØÖ®ºÍ
+            // è®¡ç®—æ•°ç»„å…ƒç´ ä¹‹å’Œ
             int sum = 0;
             for (int num : arr) {
                 sum += num;
             }
-            // ´òÓ¡Êı×éÔªËØÖ®ºÍ
-            System.out.println("¼ÆËãÖ®ºÍ£º" + sum);
+            // æ‰“å°æ•°ç»„å…ƒç´ ä¹‹å’Œ
+            System.out.println("sum => " + sum);
 
+        }
 
         scanner.close();
     }
