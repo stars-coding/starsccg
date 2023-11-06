@@ -29,6 +29,7 @@ public class Client {
         remote.setCommand(turnOn);
         remote.pressButton();
 
+        // 执行命令
         remote.setCommand(turnOff);
         remote.pressButton();
     }

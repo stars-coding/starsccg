@@ -18,6 +18,6 @@ public class TurnOffCommand implements Command {
      * 执行命令
      */
     public void execute() {
-        device.turnOff();
+        this.device.turnOff();
     }
 }

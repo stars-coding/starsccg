@@ -13,7 +13,7 @@ import java.util.concurrent.Callable;
  */
 public class Login implements Callable<Integer> {
 
-    @Option(names = {"-u", "--user"}, description = "User name")
+    @Option(names = {"-u", "--user"}, arity = "0..1", description = "User name", interactive = true)
     String user;
 
     // 设置了 arity 参数，可选交互式
@@ -31,6 +31,6 @@ public class Login implements Callable<Integer> {
     }
 
     public static void main(String[] args) {
-        new CommandLine(new Login()).execute("-u", "stars", "-p", "123", "-cp");
+        new CommandLine(new Login()).execute("-u", "stars", "-p", "123", "-cp", "123123");
     }
 }

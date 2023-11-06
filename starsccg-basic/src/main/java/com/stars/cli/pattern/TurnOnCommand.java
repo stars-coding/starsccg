@@ -18,6 +18,6 @@ public class TurnOnCommand implements Command {
      * 执行命令
      */
     public void execute() {
-        device.turnOn();
+        this.device.turnOn();
     }
 }

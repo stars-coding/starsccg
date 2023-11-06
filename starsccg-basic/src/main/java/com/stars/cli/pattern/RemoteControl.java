@@ -18,6 +18,6 @@ public class RemoteControl {
      * 按按钮
      */
     public void pressButton() {
-        command.execute();
+        this.command.execute();
     }
 }

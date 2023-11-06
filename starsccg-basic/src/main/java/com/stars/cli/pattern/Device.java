@@ -18,13 +18,13 @@ public class Device {
      * 打开
      */
     public void turnOn() {
-        System.out.println(name + " 设备打开");
+        System.out.println(this.name + " 设备打开");
     }
 
     /**
      * 关闭
      */
     public void turnOff() {
-        System.out.println(name + " 设备关闭");
+        System.out.println(this.name + " 设备关闭");
     }
 }
