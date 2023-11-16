@@ -1,0 +1,52 @@
+{
+  "name": "acm-template-pro-generator",
+  "description": "ACM 代码生成器",
+  "basePackage": "com.stars",
+  "version": "1.0",
+  "author": "stars",
+  "createTime": "2023-11-15",
+  "fileConfig": {
+    "inputRootPath": "D:/ABD/Desktop/Projects/starsccg-GIT/starsccg/starsccg-demo-projects/acm-template-pro",
+    "outputRootPath": "generated",
+    "type": "dir",
+    "files": [
+      {
+        "inputPath": "src/com/stars/acm/MainTemplate.java.ftl",
+        "outputPath": "src/com/stars/acm/MainTemplate.java",
+        "type": "file",
+        "generateType": "dynamic"
+      },
+      {
+        "inputPath": "README.md",
+        "outputPath": "README.md",
+        "type": "file",
+        "generateType": "static"
+      }
+    ]
+  },
+  "modelConfig": {
+    "models": [
+      {
+        "fieldName": "loop",
+        "type": "boolean",
+        "description": "是否循环",
+        "defaultValue": true,
+        "abbr": "l"
+      },
+      {
+        "fieldName": "author",
+        "type": "String",
+        "description": "作者注释",
+        "defaultValue": "stars",
+        "abbr": "a"
+      },
+      {
+        "fieldName": "outputText",
+        "type": "String",
+        "description": "输出信息",
+        "defaultValue": "sum = ",
+        "abbr": "o"
+      }
+    ]
+  }
+}
