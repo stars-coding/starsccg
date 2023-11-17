@@ -52,7 +52,7 @@ public class DynamicFileGenerator {
 //        mainTemplateConfig.setOutputText("求和结果：");
 
         // 如果文件不存在，则新建文件
-        if (FileUtil.exist(outputPath)) {
+        if (!FileUtil.exist(outputPath)) {
             FileUtil.touch(outputPath);
         }
 
