@@ -1,18 +1,18 @@
-package com.stars.maker.cli;
+package ${basePackage}.cli;
 
-import com.stars.maker.cli.command.GenerateCommand;
-import com.stars.maker.cli.command.ListCommand;
-import com.stars.maker.cli.command.ConfigCommand;
+import ${basePackage}.cli.command.ConfigCommand;
+import ${basePackage}.cli.command.GenerateCommand;
+import ${basePackage}.cli.command.ListCommand;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
 /**
  * 命令执行器
  *
- * @author stars
- * @version 1.0
+<#if author??> * @author ${author}</#if>
+<#if version??> * @version ${version}</#if>
  */
-@Command(name = "starsccg", mixinStandardHelpOptions = true)
+@Command(name = "${name}", mixinStandardHelpOptions = true)
 public class CommandExecutor implements Runnable {
 
     private final CommandLine commandLine;

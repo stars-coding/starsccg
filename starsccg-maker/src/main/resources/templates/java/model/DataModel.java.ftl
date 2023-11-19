@@ -17,6 +17,6 @@ public class DataModel {
      * ${modelInfo.description}
      */
     </#if>
-    private ${modelInfo.type} ${modelInfo.fieldName} <#if modelInfo.defaultValue??>=</#if> ${modelInfo.defaultValue?c};
+    private ${modelInfo.type} ${modelInfo.fieldName}<#if modelInfo.defaultValue??> = ${modelInfo.defaultValue?c}</#if>;
 </#list>
 }

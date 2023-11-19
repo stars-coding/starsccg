@@ -29,6 +29,7 @@ public class GenerateCommand implements Callable<Integer> {
     @Option(names = {"-o", "--outputText"}, arity = "0..1", description = "输出文本", interactive = true, echo = true)
     private String outputText = "sum = ";
 
+    @Override
     public Integer call() throws Exception {
         MainTemplateConfig mainTemplateConfig = new MainTemplateConfig();
         BeanUtil.copyProperties(this, mainTemplateConfig);

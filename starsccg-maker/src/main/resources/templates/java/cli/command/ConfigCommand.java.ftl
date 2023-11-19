@@ -1,8 +1,7 @@
-package com.stars.maker.cli.command;
+package ${basePackage}.cli.command;
 
 import cn.hutool.core.util.ReflectUtil;
-import com.stars.maker.model.DataModel;
-
+import ${basePackage}.model.DataModel;
 import picocli.CommandLine.Command;
 
 import java.lang.reflect.Field;
@@ -10,21 +9,16 @@ import java.lang.reflect.Field;
 /**
  * 查看参数信息命令
  *
- * @author stars
- * @version 1.0
+<#if author??> * @author ${author}</#if>
+<#if version??> * @version ${version}</#if>
  */
 @Command(name = "config", description = "查看参数信息", mixinStandardHelpOptions = true)
 public class ConfigCommand implements Runnable {
 
+    @Override
     public void run() {
         // 实现 config 命令的逻辑
         System.out.println("查看参数信息");
-
-//        // Java 原生工具实现
-//        // 获取要打印属性信息的类
-//        Class<?> myClass = DataModel.class;
-//        // 获取类的所有字段
-//        Field[] fields = myClass.getDeclaredFields();
 
         // 利用 Hutool 工具列获取字段属性
         Field[] fields = ReflectUtil.getFields(DataModel.class);

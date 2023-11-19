@@ -1,10 +1,12 @@
-package com.stars.maker;
+package ${basePackage};
+
+import ${basePackage}.cli.CommandExecutor;
 
 /**
  * 主类（面向用户）
  *
- * @author stars
- * @version 1.0
+<#if author??> * @author ${author}</#if>
+<#if version??> * @version ${version}</#if>
  */
 public class Main {
 
@@ -17,7 +19,7 @@ public class Main {
 //        args = new String[]{"generate", "-l", "-a", "-o"};
 //        args = new String[]{"config"};
 //        args = new String[]{"list"};
-//        CommandExecutor commandExecutor = new CommandExecutor();
-//        commandExecutor.doExecute(args);
+        CommandExecutor commandExecutor = new CommandExecutor();
+        commandExecutor.doExecute(args);
     }
 }
