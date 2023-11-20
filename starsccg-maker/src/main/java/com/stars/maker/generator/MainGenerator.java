@@ -12,6 +12,8 @@ import java.io.File;
 import java.io.IOException;
 
 /**
+ * 核心生成器
+ *
  * @author stars
  * @version 1.0
  */
@@ -51,9 +53,13 @@ public class MainGenerator {
         // generated/src/main/java/com/stars
         String outputBaseJavaPackagePath = outputPath + File.separator + "src\\main\\java\\" + outputBasePackagePath;
 
+        // 声明输入输出路径
+        String inputFilePath;
+        String outputFilePath;
+
         // 生成 model.DataModel.java 文件
-        String inputFilePath = inputResourcePath + "templates/java/model/DataModel.java.ftl";
-        String outputFilePath = outputBaseJavaPackagePath + File.separator + "model/DataModel.java";
+        inputFilePath = inputResourcePath + "templates/java/model/DataModel.java.ftl";
+        outputFilePath = outputBaseJavaPackagePath + File.separator + "model/DataModel.java";
         outputFilePath = StrUtil.join("/", StrUtil.split(outputFilePath, "\\"));
         DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
 
@@ -85,6 +91,21 @@ public class MainGenerator {
         inputFilePath = inputResourcePath + "templates/java/Main.java.ftl";
         outputFilePath = outputBaseJavaPackagePath + File.separator + "Main.java";
         outputFilePath = StrUtil.join("/", StrUtil.split(outputFilePath, "\\"));
+        DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
+
+        // 生成 generator.DynamicGenerator.java 文件
+        inputFilePath = inputResourcePath + File.separator + "templates/java/generator/DynamicGenerator.java.ftl";
+        outputFilePath = outputBaseJavaPackagePath + "/generator/DynamicGenerator.java";
+        DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
+
+        // 生成 generator.MainGenerator.java 文件
+        inputFilePath = inputResourcePath + File.separator + "templates/java/generator/MainGenerator.java.ftl";
+        outputFilePath = outputBaseJavaPackagePath + "/generator/MainGenerator.java";
+        DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
+
+        // 生成 generator.StaticGenerator.java 文件
+        inputFilePath = inputResourcePath + File.separator + "templates/java/generator/StaticGenerator.java.ftl";
+        outputFilePath = outputBaseJavaPackagePath + "/generator/StaticGenerator.java";
         DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
     }
 }

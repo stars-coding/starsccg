@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * 核心生成器
+ * 文件生成器
  *
  * @author stars
  * @version 1.0
