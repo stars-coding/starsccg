@@ -1,7 +1,7 @@
 package com.stars.cli.command;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.stars.generator.file.FileGenerator;
+import com.stars.generator.FileGenerator;
 import com.stars.model.DataModel;
 import lombok.Data;
 import picocli.CommandLine.Command;

@@ -1,4 +1,4 @@
-package com.stars.maker.model;
+package com.stars.model;
 
 import lombok.Data;
 

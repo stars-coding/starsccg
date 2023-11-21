@@ -1,5 +1,7 @@
-package com.stars.maker.generator.file;
+package com.stars.maker.generator;
 
+import com.stars.maker.generator.file.DynamicFileGenerator;
+import com.stars.maker.generator.file.StaticFileGenerator;
 import com.stars.maker.model.DataModel;
 import freemarker.template.TemplateException;
 

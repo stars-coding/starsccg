@@ -1,4 +1,4 @@
-package com.stars.generator.file;
+package com.stars.generator;
 
 import cn.hutool.core.io.FileUtil;
 import freemarker.template.Configuration;

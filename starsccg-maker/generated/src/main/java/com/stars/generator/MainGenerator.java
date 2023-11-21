@@ -1,6 +1,5 @@
 package com.stars.generator;
 
-import com.stars.model.DataModel;
 import freemarker.template.TemplateException;
 
 import java.io.File;

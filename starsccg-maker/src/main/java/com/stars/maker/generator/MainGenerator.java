@@ -24,7 +24,7 @@ public class MainGenerator {
      *
      * @param args
      */
-    public static void main(String[] args) throws IOException, TemplateException {
+    public static void main(String[] args) throws IOException, TemplateException, InterruptedException {
 
         // 获取元信息
         Meta meta = MetaManager.getMetaObject();
@@ -107,5 +107,15 @@ public class MainGenerator {
         inputFilePath = inputResourcePath + File.separator + "templates/java/generator/StaticGenerator.java.ftl";
         outputFilePath = outputBaseJavaPackagePath + "/generator/StaticGenerator.java";
         DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
+
+        // 生成 pom.xml.ftl 文件
+        inputFilePath = inputResourcePath + "templates/java/pom.xml.ftl";
+        outputFilePath = outputBaseJavaPackagePath + File.separator + "pom.xml";
+        outputFilePath = StrUtil.join("/", StrUtil.split(outputFilePath, "\\"));
+        DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
+
+        // 构建 jar 包
+        // generated/src/main/java/com/stars
+        JarGenerator.doGenerate(outputBaseJavaPackagePath);
     }
 }
