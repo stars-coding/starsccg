@@ -11,6 +11,13 @@ import java.util.Map;
  */
 public class JarGenerator {
 
+    /**
+     * 生成 jar 包
+     *
+     * @param projectDir
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public static void doGenerate(String projectDir) throws IOException, InterruptedException {
         // 清理之前构建的 jar 包再执行打包
         // 注意不同操作系统，执行的命令不同
@@ -38,8 +45,5 @@ public class JarGenerator {
         // 等待命令执行完成
         int exitCode = process.waitFor();
         System.out.println("命令执行结束，退出码：" + exitCode);
-    }
-
-    public static void main(String[] args) throws IOException, InterruptedException {
     }
 }

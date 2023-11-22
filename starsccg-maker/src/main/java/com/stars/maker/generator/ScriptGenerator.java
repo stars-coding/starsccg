@@ -1,0 +1,61 @@
+package com.stars.maker.generator;
+
+import cn.hutool.core.io.FileUtil;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
+import java.util.Set;
+
+/**
+ * 脚本文件生成器
+ *
+ * @author stars
+ * @version 1.0.0
+ */
+public class ScriptGenerator {
+
+    /**
+     * 生成脚本文件
+     *
+     * @param outputPath
+     * @param jarPath
+     * @throws IOException
+     */
+    public static void doGenerate(String outputPath, String jarPath) throws IOException {
+
+        StringBuilder stringBuilder;
+
+        // linux
+        stringBuilder = new StringBuilder();
+        // 拼接字符串
+        stringBuilder.append("#!/bin/bash").append("\n");
+        stringBuilder.append(String.format("java -jar %s \"$@\"", jarPath)).append("\n");
+        // 将字符串写入文件
+        FileUtil.writeBytes(stringBuilder.toString().getBytes(StandardCharsets.UTF_8), outputPath);
+        // 添加可执行权限
+        try {
+            Set<PosixFilePermission> permissions = PosixFilePermissions.fromString("rwxrwxrwx");
+            Files.setPosixFilePermissions(Paths.get(outputPath), permissions);
+        } catch (Exception e) {
+            // 防止 windows 下，执行报错
+        }
+
+        // windows
+        stringBuilder = new StringBuilder();
+        // 拼接字符串
+        stringBuilder.append("@echo off").append("\n");
+        stringBuilder.append(String.format("java -jar %s %%*", jarPath)).append("\n");
+        // 将字符串写入文件
+        FileUtil.writeBytes(stringBuilder.toString().getBytes(StandardCharsets.UTF_8), outputPath + ".bat");
+    }
+
+    public static void main(String[] args) throws IOException {
+        String outputPath = System.getProperty("user.dir") + File.separator + "generator";
+        ScriptGenerator.doGenerate(outputPath, "");
+    }
+}

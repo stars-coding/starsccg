@@ -20,7 +20,7 @@ import java.util.Locale;
 public class DynamicFileGenerator {
 
     /**
-     * 生成文件
+     * 生成动态文件
      *
      * @param inputPath  模板文件输入路径
      * @param outputPath 代码生成输出路径

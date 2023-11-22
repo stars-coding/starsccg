@@ -1,7 +1,7 @@
 package com.stars.cli.command;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.stars.generator.FileGenerator;
+import com.stars.generator.MainGenerator;
 import com.stars.model.DataModel;
 import lombok.Data;
 import picocli.CommandLine.Command;
@@ -32,7 +32,7 @@ public class GenerateCommand implements Callable<Integer> {
     public Integer call() throws Exception {
         DataModel dataModel = new DataModel();
         BeanUtil.copyProperties(this, dataModel);
-        FileGenerator.doGenerate(dataModel);
+        MainGenerator.doGenerate(dataModel);
         return 0;
     }
 }

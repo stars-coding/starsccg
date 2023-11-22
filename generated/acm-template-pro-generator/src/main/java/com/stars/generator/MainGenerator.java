@@ -24,7 +24,7 @@ public class MainGenerator {
 
         // 读取元信息输入输出根路径
         String inputRootPath = "D:/ABD/Desktop/Projects/starsccg-GIT/starsccg/starsccg-demo-projects/acm-template-pro";
-        String outputRootPath = "generated";
+        String outputRootPath = "D:/ABD/Desktop/Projects/starsccg-GIT/starsccg/generated";
 
         // 声明输入输出路径
         String inputPath;

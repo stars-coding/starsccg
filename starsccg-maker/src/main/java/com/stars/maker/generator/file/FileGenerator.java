@@ -17,23 +17,6 @@ import java.io.IOException;
 public class FileGenerator {
 
     /**
-     * 入口函数
-     *
-     * @param args
-     * @throws TemplateException
-     * @throws IOException
-     */
-    public static void main(String[] args) throws TemplateException, IOException {
-        // 创建数据模型对象
-        DataModel dataModel = new DataModel();
-        dataModel.setAuthor("stars");
-        dataModel.setLoop(false);
-        dataModel.setOutputText("求和结果：");
-        // 生成文件
-        FileGenerator.doGenerate(dataModel);
-    }
-
-    /**
      * 生成文件
      *
      * @param model 数据模型对象
@@ -56,5 +39,22 @@ public class FileGenerator {
         String outputDynamicFilePath = outputStaticFilePath + File.separator
                 + "acm-template/src/com/stars/acm/MainTemplate.java";
         DynamicFileGenerator.doGenerate(inputDynamicFilePath, outputDynamicFilePath, model);
+    }
+
+    /**
+     * 入口函数
+     *
+     * @param args
+     * @throws TemplateException
+     * @throws IOException
+     */
+    public static void main(String[] args) throws TemplateException, IOException {
+        // 创建数据模型对象
+        DataModel dataModel = new DataModel();
+        dataModel.setAuthor("stars");
+        dataModel.setLoop(false);
+        dataModel.setOutputText("求和结果：");
+        // 生成文件
+        FileGenerator.doGenerate(dataModel);
     }
 }

@@ -28,13 +28,13 @@ public class MainGenerator {
 
         // 获取元信息
         Meta meta = MetaManager.getMetaObject();
-        System.out.println(meta);
 
         // 声明输出根路径
         // 模块单独打开时，为当前模块根路径
         String projectPath = System.getProperty("user.dir");
         // 输出的根路径
-        String outputPath = projectPath + File.separator + "generated";
+//        String outputPath = projectPath + File.separator + "generated" + File.separator + meta.getName();
+        String outputPath = meta.getFileConfig().getOutputRootPath() + File.separator + meta.getName();
         // 目录为空则创建目录
         if (!FileUtil.exist(outputPath)) {
             FileUtil.mkdir(outputPath);
@@ -110,12 +110,18 @@ public class MainGenerator {
 
         // 生成 pom.xml.ftl 文件
         inputFilePath = inputResourcePath + "templates/java/pom.xml.ftl";
-        outputFilePath = outputBaseJavaPackagePath + File.separator + "pom.xml";
+        outputFilePath = outputPath + File.separator + "pom.xml";
         outputFilePath = StrUtil.join("/", StrUtil.split(outputFilePath, "\\"));
         DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
 
         // 构建 jar 包
         // generated/src/main/java/com/stars
-        JarGenerator.doGenerate(outputBaseJavaPackagePath);
+        JarGenerator.doGenerate(outputPath);
+
+        // 封装脚本
+        String shellOutputFilePath = outputPath + File.separator + "generator";
+        String jarName = String.format("%s-%s-jar-with-dependencies.jar", meta.getName(), meta.getVersion());
+        String jarPath = "target/" + jarName;
+        ScriptGenerator.doGenerate(shellOutputFilePath, jarPath);
     }
 }

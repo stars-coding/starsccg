@@ -7,7 +7,7 @@
   "createTime": "2023-11-15",
   "fileConfig": {
     "inputRootPath": "D:/ABD/Desktop/Projects/starsccg-GIT/starsccg/starsccg-demo-projects/acm-template-pro",
-    "outputRootPath": "generated",
+    "outputRootPath": "D:/ABD/Desktop/Projects/starsccg-GIT/starsccg/generated",
     "type": "dir",
     "files": [
       {
