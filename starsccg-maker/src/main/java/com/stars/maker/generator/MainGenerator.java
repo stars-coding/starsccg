@@ -118,6 +118,12 @@ public class MainGenerator {
         outputFilePath = StrUtil.join("/", StrUtil.split(outputFilePath, "\\"));
         DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
 
+        // 生成 README.md.ftl 文件
+        inputFilePath = inputResourcePath + "templates/java/README.md.ftl";
+        outputFilePath = outputPath + File.separator + "README.md";
+        outputFilePath = StrUtil.join("/", StrUtil.split(outputFilePath, "\\"));
+        DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
+
         // 构建 jar 包
         // generated/src/main/java/com/stars
         JarGenerator.doGenerate(outputPath);
