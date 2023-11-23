@@ -15,7 +15,6 @@ public class MainTemplate {
 <#if loop>
         while (scanner.hasNext()) {
 </#if>
-
             // 读取输入的元素个数
             int n = scanner.nextInt();
             // 创建数组
@@ -31,7 +30,6 @@ public class MainTemplate {
             }
             // 打印数组元素之和
             System.out.println("${outputText}" + sum);
-
 <#if loop>
         }
 </#if>

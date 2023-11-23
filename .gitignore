@@ -1,12 +1,9 @@
 ### Custom template
 .idea
 target
-starsccg.iml
-starsccg.ipr
-starsccg.iws
-starsccg-basic.iml
-starsccg-basic.ipr
-starsccg-basic.iws
+*.iml
+*.ipr
+*.iws
 
 
 # Created by .ignore support plugin (hsz.mobi)

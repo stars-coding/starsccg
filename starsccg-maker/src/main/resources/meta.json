@@ -6,8 +6,9 @@
   "author": "stars",
   "createTime": "2023-11-15",
   "fileConfig": {
-    "inputRootPath": "D:/ABD/Desktop/Projects/starsccg-GIT/starsccg/starsccg-demo-projects/acm-template-pro",
-    "outputRootPath": "D:/ABD/Desktop/Projects/starsccg-GIT/starsccg/generated",
+    "inputRootPath": ".source/acm-template-pro",
+    "outputRootPath": "generated",
+    "sourceRootPath": "D:/ABD/Desktop/Projects/starsccg-GIT/starsccg/starsccg-demo-projects/acm-template-pro",
     "type": "dir",
     "files": [
       {

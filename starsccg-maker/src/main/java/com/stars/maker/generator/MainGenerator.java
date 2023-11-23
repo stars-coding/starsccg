@@ -30,15 +30,19 @@ public class MainGenerator {
         Meta meta = MetaManager.getMetaObject();
 
         // 声明输出根路径
-        // 模块单独打开时，为当前模块根路径
         String projectPath = System.getProperty("user.dir");
-        // 输出的根路径
-//        String outputPath = projectPath + File.separator + "generated" + File.separator + meta.getName();
-        String outputPath = meta.getFileConfig().getOutputRootPath() + File.separator + meta.getName();
+        // 输出的根路径，指在哪里生成这个代码生成器项目文件
+        String outputPath = projectPath + File.separator + "generated" + File.separator + meta.getName();
         // 目录为空则创建目录
         if (!FileUtil.exist(outputPath)) {
             FileUtil.mkdir(outputPath);
         }
+
+        // 将输入的项目代码文件复制到代码生成器项目中
+        String sourceRootPath = meta.getFileConfig().getSourceRootPath();
+        String sourceCopyDestPath = outputPath + File.separator + ".source";
+        FileUtil.copy(sourceRootPath, sourceCopyDestPath, false);
+
 
         // 读取 resources 目录
         ClassPathResource classPathResource = new ClassPathResource("");
