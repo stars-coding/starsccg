@@ -4,7 +4,7 @@ package com.stars.cli.pattern;
  * 打开命令
  *
  * @author stars
- * @version 1.0
+ * @version 1.0.0
  */
 public class TurnOnCommand implements Command {
 

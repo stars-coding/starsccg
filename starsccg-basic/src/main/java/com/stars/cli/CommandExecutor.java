@@ -10,7 +10,7 @@ import picocli.CommandLine.Command;
  * 命令执行器
  *
  * @author stars
- * @version 1.0
+ * @version 1.0.0
  */
 @Command(name = "starsccg", mixinStandardHelpOptions = true)
 public class CommandExecutor implements Runnable {

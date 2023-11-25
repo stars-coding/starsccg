@@ -15,7 +15,7 @@ import java.util.Locale;
  * 动态文件生成器
  *
  * @author stars
- * @version 1.0
+ * @version 1.0.0
  */
 public class DynamicFileGenerator {
 

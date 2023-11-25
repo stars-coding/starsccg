@@ -8,7 +8,7 @@ import cn.hutool.json.JSONUtil;
  * 元信息管理器
  *
  * @author stars
- * @version 1.0
+ * @version 1.0.0
  */
 public class MetaManager {
 

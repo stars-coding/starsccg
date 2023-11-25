@@ -6,7 +6,7 @@ import lombok.Data;
  * 动态模版配置
  *
  * @author stars
- * @version 1.0
+ * @version 1.0.0
  */
 @Data
 public class DataModel {

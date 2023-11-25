@@ -9,7 +9,7 @@ import java.util.List;
  * 元信息
  *
  * @author stars
- * @version 1.0
+ * @version 1.0.0
  */
 @NoArgsConstructor
 @Data

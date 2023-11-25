@@ -7,7 +7,7 @@ import picocli.CommandLine.Command;
  * 子命令测试
  *
  * @author stars
- * @version 1.0
+ * @version 1.0.0
  */
 @Command(name = "main", mixinStandardHelpOptions = true)
 public class SubCommandExample implements Runnable {

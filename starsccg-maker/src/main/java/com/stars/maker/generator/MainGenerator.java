@@ -15,7 +15,7 @@ import java.io.IOException;
  * 核心生成器
  *
  * @author stars
- * @version 1.0
+ * @version 1.0.0
  */
 public class MainGenerator {
 

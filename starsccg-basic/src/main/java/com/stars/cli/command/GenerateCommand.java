@@ -14,7 +14,7 @@ import picocli.CommandLine.Option;
  * 生成命令
  *
  * @author stars
- * @version 1.0
+ * @version 1.0.0
  */
 @Command(name = "generate", description = "生成代码", mixinStandardHelpOptions = true)
 @Data

@@ -9,7 +9,7 @@ import java.util.concurrent.Callable;
  * 交互式输入测试
  *
  * @author stars
- * @version 1.0
+ * @version 1.0.0
  */
 public class Login implements Callable<Integer> {
 

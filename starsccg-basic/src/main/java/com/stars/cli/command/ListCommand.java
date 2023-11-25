@@ -10,7 +10,7 @@ import java.util.List;
  * 查看文件列表命令
  *
  * @author stars
- * @version 1.0
+ * @version 1.0.0
  */
 @Command(name = "list", description = "查看文件列表", mixinStandardHelpOptions = true)
 public class ListCommand implements Runnable {

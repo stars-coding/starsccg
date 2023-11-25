@@ -6,7 +6,7 @@ import com.stars.cli.CommandExecutor;
  * 主类（面向用户）
  *
  * @author stars
- * @version 1.0
+ * @version 1.0.0
  */
 public class Main {
 

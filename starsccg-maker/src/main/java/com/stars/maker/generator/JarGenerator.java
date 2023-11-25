@@ -7,7 +7,7 @@ import java.util.Map;
  * jar 生成器
  *
  * @author stars
- * @version 1.0
+ * @version 1.0.0
  */
 public class JarGenerator {
 

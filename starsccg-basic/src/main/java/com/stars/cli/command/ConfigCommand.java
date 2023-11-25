@@ -11,7 +11,7 @@ import java.lang.reflect.Field;
  * 查看参数信息命令
  *
  * @author stars
- * @version 1.0
+ * @version 1.0.0
  */
 @Command(name = "config", description = "查看参数信息", mixinStandardHelpOptions = true)
 public class ConfigCommand implements Runnable {

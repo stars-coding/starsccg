@@ -4,7 +4,7 @@ package com.stars.cli.pattern;
  * 关闭命令
  *
  * @author stars
- * @version 1.0
+ * @version 1.0.0
  */
 public class TurnOffCommand implements Command {
 

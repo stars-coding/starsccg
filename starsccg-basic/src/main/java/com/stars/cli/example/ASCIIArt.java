@@ -9,9 +9,9 @@ import picocli.CommandLine.Parameters;
  * 引入 picocli 测试
  *
  * @author stars
- * @version 1.0
+ * @version 1.0.0
  */
-@Command(name = "ASCIIArt", version = "ASCIIArt 1.0", mixinStandardHelpOptions = true)
+@Command(name = "ASCIIArt", version = "ASCIIArt 1.0.0", mixinStandardHelpOptions = true)
 public class ASCIIArt implements Runnable {
 
     @Option(names = {"-s", "--font-size"}, description = "Font size")
