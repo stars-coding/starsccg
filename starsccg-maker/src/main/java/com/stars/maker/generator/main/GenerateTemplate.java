@@ -1,8 +1,10 @@
-package com.stars.maker.generator;
+package com.stars.maker.generator.main;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ClassPathResource;
 import cn.hutool.core.util.StrUtil;
+import com.stars.maker.generator.JarGenerator;
+import com.stars.maker.generator.ScriptGenerator;
 import com.stars.maker.generator.file.DynamicFileGenerator;
 import com.stars.maker.meta.Meta;
 import com.stars.maker.meta.MetaManager;
@@ -12,23 +14,23 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * 核心生成器
+ * 生成面板
  *
  * @author stars
  * @version 1.0.0
  */
-public class MainGenerator {
+public class GenerateTemplate {
 
     /**
-     * 入口函数
+     * 生成
      *
-     * @param args
+     * @throws IOException
+     * @throws TemplateException
+     * @throws InterruptedException
      */
-    public static void main(String[] args) throws IOException, TemplateException, InterruptedException {
-
+    public void doGenerate() throws IOException, TemplateException, InterruptedException {
         // 获取元信息
         Meta meta = MetaManager.getMetaObject();
-
         // 声明输出根路径
         String projectPath = System.getProperty("user.dir");
         // 输出的根路径，指在哪里生成这个代码生成器项目文件
@@ -38,12 +40,46 @@ public class MainGenerator {
             FileUtil.mkdir(outputPath);
         }
 
+        // 1、复制源文件
+        String sourceCopyDestPath = this.copySource(meta, outputPath);
+
+        // 2、生成代码
+        this.generateCode(meta, outputPath);
+
+        // 3、构建 jar 包
+        String jarPath = this.buildJar(meta, outputPath);
+
+        // 4、封装脚本
+        String shellOutputFilePath = this.buildScript(outputPath, jarPath);
+
+        // 5、生成精简版的程序（产物包）
+        this.buildDist(outputPath, sourceCopyDestPath, jarPath, shellOutputFilePath);
+    }
+
+    /**
+     * 拷贝源文件
+     *
+     * @param meta
+     * @param outputPath
+     * @return
+     */
+    protected String copySource(Meta meta, String outputPath) {
         // 将源模板文件复制到代码生成器项目中
         String sourceRootPath = meta.getFileConfig().getSourceRootPath();
         String sourceCopyDestPath = outputPath + File.separator + ".source";
         FileUtil.copy(sourceRootPath, sourceCopyDestPath, false);
+        return sourceCopyDestPath;
+    }
 
-
+    /**
+     * 生成代码
+     *
+     * @param meta
+     * @param outputPath
+     * @throws IOException
+     * @throws TemplateException
+     */
+    protected void generateCode(Meta meta, String outputPath) throws IOException, TemplateException {
         // 读取 resources 目录
         ClassPathResource classPathResource = new ClassPathResource("");
         // 获取 resources 目录的绝对路径
@@ -123,17 +159,50 @@ public class MainGenerator {
         outputFilePath = outputPath + File.separator + "README.md";
         outputFilePath = StrUtil.join("/", StrUtil.split(outputFilePath, "\\"));
         DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
+    }
 
-        // 构建 jar 包
-        // generated/src/main/java/com/stars
+    /**
+     * 构建 jar 包
+     *
+     * @param meta
+     * @param outputPath
+     * @return
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    protected String buildJar(Meta meta, String outputPath) throws IOException, InterruptedException {
+        // 生成 jar 包
         JarGenerator.doGenerate(outputPath);
-
-        // 封装脚本
-        String shellOutputFilePath = outputPath + File.separator + "generator";
         String jarName = String.format("%s-%s-jar-with-dependencies.jar", meta.getName(), meta.getVersion());
         String jarPath = "target/" + jarName;
-        ScriptGenerator.doGenerate(shellOutputFilePath, jarPath);
+        return jarPath;
+    }
 
+    /**
+     * 构建脚本
+     *
+     * @param outputPath
+     * @param jarPath
+     * @return
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    protected String buildScript(String outputPath, String jarPath) throws IOException, InterruptedException {
+        // 封装脚本
+        String shellOutputFilePath = outputPath + File.separator + "generator";
+        ScriptGenerator.doGenerate(shellOutputFilePath, jarPath);
+        return shellOutputFilePath;
+    }
+
+    /**
+     * 构建产物
+     *
+     * @param outputPath
+     * @param sourceCopyDestPath
+     * @param jarPath
+     * @param shellOutputFilePath
+     */
+    protected void buildDist(String outputPath, String sourceCopyDestPath, String jarPath, String shellOutputFilePath) {
         // 生成精简版的程序（产物包）
         String distOutputPath = outputPath + "-dist";
         // 拷贝 jar 包
@@ -146,7 +215,5 @@ public class MainGenerator {
         FileUtil.copy(shellOutputFilePath + ".bat", distOutputPath, true);
         // 拷贝源模板文件
         FileUtil.copy(sourceCopyDestPath, distOutputPath, true);
-        // 拷贝 README 文档
-        FileUtil.copy(outputFilePath, distOutputPath, true);
     }
 }
