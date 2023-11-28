@@ -106,6 +106,11 @@ public class MataValidator {
             return;
         }
         for (Meta.FileConfig.FileInfo fileInfo : fileInfoList) {
+            // 类型为 group ，不进行校验
+            String type = fileInfo.getType();
+            if (FileTypeEnum.GROUP.getValue().equals(type)) {
+                continue;
+            }
             // 校验 inputPath ，有问题抛出异常
             String inputPath = fileInfo.getInputPath();
             // isBlank 为 true 表示 对象 == null 或 去掉首尾空白字串为空串
@@ -123,7 +128,7 @@ public class MataValidator {
             }
             // 校验 type ，有问题依据路径设置默认值
             // type：默认 inputPath 有文件后缀为 file，否则为 dir
-            String type = fileInfo.getType();
+            type = fileInfo.getType();
             // isBlank 为 true 表示 对象 == null 或 去掉首尾空白字串为空串
             // isBlank 为 false 表示 对象 != null 且 去掉首尾空白字串不为空串
             if (StrUtil.isBlank(type)) {
