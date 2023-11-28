@@ -1,6 +1,7 @@
 package com.stars.maker.generator.file;
 
 import cn.hutool.core.io.FileUtil;
+import com.stars.maker.meta.Meta;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -28,7 +29,7 @@ public class DynamicFileGenerator {
      * @throws IOException
      * @throws TemplateException
      */
-    public static void doGenerate(String inputPath, String outputPath, Object model) throws IOException, TemplateException {
+    public static void doGenerate(String inputPath, String outputPath, Meta model) throws IOException, TemplateException {
         // 创建 Configuration 对象，参数为 FreeMarker 版本号
         Configuration configuration = new Configuration(Configuration.VERSION_2_3_32);
 

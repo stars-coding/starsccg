@@ -1,5 +1,7 @@
 package ${basePackage}.generator;
 
+import ${basePackage}.model.DataModel;
+
 import cn.hutool.core.io.FileUtil;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -31,7 +33,7 @@ public class DynamicGenerator {
      * @throws IOException
      * @throws TemplateException
      */
-    public static void doGenerate(String inputPath, String outputPath, Object model) throws IOException, TemplateException {
+    public static void doGenerate(String inputPath, String outputPath, DataModel model) throws IOException, TemplateException {
         // 创建 Configuration 对象，参数为 FreeMarker 版本号
         Configuration configuration = new Configuration(Configuration.VERSION_2_3_32);
 

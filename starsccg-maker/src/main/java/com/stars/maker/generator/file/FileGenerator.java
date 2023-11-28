@@ -1,8 +1,6 @@
-package com.stars.maker.generator;
+package com.stars.maker.generator.file;
 
-import com.stars.maker.generator.file.DynamicFileGenerator;
-import com.stars.maker.generator.file.StaticFileGenerator;
-import com.stars.maker.model.DataModel;
+import com.stars.maker.meta.Meta;
 import freemarker.template.TemplateException;
 
 import java.io.File;
@@ -23,7 +21,7 @@ public class FileGenerator {
      * @throws TemplateException
      * @throws IOException
      */
-    public static void doGenerate(Object model) throws IOException, TemplateException {
+    public static void doGenerate(Meta model) throws IOException, TemplateException {
         // 模块单独打开时，为当前模块根路径
         String projectPath = System.getProperty("user.dir");
         // 顶级项目的根路径
@@ -49,12 +47,12 @@ public class FileGenerator {
      * @throws IOException
      */
     public static void main(String[] args) throws TemplateException, IOException {
-        // 创建数据模型对象
-        DataModel dataModel = new DataModel();
-        dataModel.setAuthor("stars");
-        dataModel.setLoop(false);
-        dataModel.setOutputText("求和结果：");
-        // 生成文件
-        FileGenerator.doGenerate(dataModel);
+//        // 创建数据模型对象
+//        DataModel dataModel = new DataModel();
+//        dataModel.author = "stars";
+//        dataModel.loop = false;
+//        dataModel.outputText = "求和结果：";
+//        // 生成文件
+//        FileGenerator.doGenerate(dataModel);
     }
 }

@@ -18,6 +18,13 @@
         "generateType": "dynamic"
       },
       {
+        "inputPath": ".gitignore",
+        "outputPath": ".gitignore",
+        "type": "file",
+        "generateType": "static",
+        "condition": "needGit"
+      },
+      {
         "inputPath": "README.md",
         "outputPath": "README.md",
         "type": "file",
@@ -27,6 +34,12 @@
   },
   "modelConfig": {
     "models": [
+      {
+        "fieldName": "needGit",
+        "type": "boolean",
+        "description": "是否生成 .gitignore 文件",
+        "defaultValue": true
+      },
       {
         "fieldName": "loop",
         "type": "boolean",
