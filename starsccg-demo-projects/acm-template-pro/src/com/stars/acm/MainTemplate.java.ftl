@@ -5,7 +5,7 @@ import java.util.Scanner;
 /**
  * ACM 输入模板（多数之和）
  *
- * @author ${author}
+ * @author ${mainTemplate.author}
  */
 public class MainTemplate {
 
@@ -29,7 +29,7 @@ public class MainTemplate {
                 sum += num;
             }
             // 打印数组元素之和
-            System.out.println("${outputText}" + sum);
+            System.out.println("${mainTemplate.outputText}" + sum);
 <#if loop>
         }
 </#if>

@@ -19,6 +19,7 @@ public class Main {
 //        args = new String[]{"generate", "-l", "-a", "-o"};
 //        args = new String[]{"config"};
 //        args = new String[]{"list"};
+//        args = new String[]{"generate", "-l"};
         CommandExecutor commandExecutor = new CommandExecutor();
         commandExecutor.doExecute(args);
     }

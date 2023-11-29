@@ -25,13 +25,13 @@ generator generate<#list modelConfig.models as modelInfo><#if modelInfo.abbr??> 
 ## 参数说明
 
 <#list modelConfig.models as modelInfo>
-${modelInfo?index + 1}）${modelInfo.fieldName}
+${modelInfo?index + 1}）<#if modelInfo.fieldName??>${modelInfo.fieldName}</#if>
 
 类型：${modelInfo.type}
 
 描述：${modelInfo.description}
 
-默认值：${modelInfo.defaultValue?c}
+默认值：<#if modelInfo.defaultValue??>${modelInfo.defaultValue?c}</#if>
 
 缩写：<#if modelInfo.abbr??>-${modelInfo.abbr}</#if>
 

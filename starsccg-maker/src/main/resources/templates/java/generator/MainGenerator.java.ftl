@@ -33,11 +33,6 @@ public class MainGenerator {
      * @throws IOException
      */
     public static void doGenerate(DataModel model) throws TemplateException, IOException {
-
-<#list modelConfig.models as modelInfo>
-         ${modelInfo.type} ${modelInfo.fieldName} = model.${modelInfo.fieldName};
-</#list>
-
         // 读取元信息输入输出根路径
         String inputRootPath = "${fileConfig.inputRootPath}";
         String outputRootPath = "${fileConfig.outputRootPath}";
@@ -45,6 +40,19 @@ public class MainGenerator {
         // 声明输入输出路径
         String inputPath;
         String outputPath;
+<#-- 获取模型变量 -->
+<#list modelConfig.models as modelInfo>
+    <#-- 有分组 -->
+    <#if modelInfo.groupKey??>
+        <#list modelInfo.models as subModelInfo>
+
+        ${subModelInfo.type} ${subModelInfo.fieldName} = model.${modelInfo.groupKey}.${subModelInfo.fieldName};
+        </#list>
+    <#else>
+
+        ${modelInfo.type} ${modelInfo.fieldName} = model.${modelInfo.fieldName};
+    </#if>
+</#list>
 <#list fileConfig.files as fileInfo>
     <#if fileInfo.groupKey??>
 

@@ -12,27 +12,27 @@
     "type": "dir",
     "files": [
       {
+        "type": "file",
         "inputPath": "src/com/stars/acm/MainTemplate.java.ftl",
         "outputPath": "src/com/stars/acm/MainTemplate.java",
-        "type": "file",
         "generateType": "dynamic"
       },
       {
+        "type": "group",
         "groupKey": "git",
         "groupName": "开源",
-        "type": "group",
         "condition": "needGit",
         "files": [
           {
+            "type": "file",
             "inputPath": ".gitignore",
             "outputPath": ".gitignore",
-            "type": "file",
             "generateType": "static"
           },
           {
+            "type": "file",
             "inputPath": "README.md",
             "outputPath": "README.md",
-            "type": "file",
             "generateType": "static"
           }
         ]
@@ -50,23 +50,32 @@
       {
         "fieldName": "loop",
         "type": "boolean",
-        "description": "是否循环",
+        "description": "是否生成循环",
         "defaultValue": true,
         "abbr": "l"
       },
       {
-        "fieldName": "author",
-        "type": "String",
-        "description": "作者注释",
-        "defaultValue": "stars",
-        "abbr": "a"
-      },
-      {
-        "fieldName": "outputText",
-        "type": "String",
-        "description": "输出信息",
-        "defaultValue": "sum = ",
-        "abbr": "o"
+        "groupKey": "mainTemplate",
+        "groupName": "核心模板",
+        "type": "MainTemplate",
+        "description": "用于生成核心模板文件",
+        "condition": "loop",
+        "models": [
+          {
+            "fieldName": "author",
+            "type": "String",
+            "description": "作者注释",
+            "defaultValue": "stars",
+            "abbr": "a"
+          },
+          {
+            "fieldName": "outputText",
+            "type": "String",
+            "description": "输出信息",
+            "defaultValue": "sum = ",
+            "abbr": "o"
+          }
+        ]
       }
     ]
   }

@@ -6,10 +6,12 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import com.stars.maker.meta.enums.FileGenerateTypeEnum;
 import com.stars.maker.meta.enums.FileTypeEnum;
+import com.stars.maker.meta.enums.ModelTypeEnum;
 
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 元信息校验
@@ -174,6 +176,17 @@ public class MataValidator {
             return;
         }
         for (Meta.ModelConfig.ModelInfo modelInfo : modelInfoList) {
+            // 类型为 group ，不进行校验
+            String groupKey = modelInfo.getGroupKey();
+            if (StrUtil.isNotEmpty(groupKey)) {
+                // 生成中间参数
+                List<Meta.ModelConfig.ModelInfo> subModelInfoList = modelInfo.getModels();
+                String allArgsStr = modelInfo.getModels().stream()
+                        .map(subModelInfo -> String.format("\"--%s\"", subModelInfo.getFieldName()))
+                        .collect(Collectors.joining(", "));
+                modelInfo.setAllArgsStr(allArgsStr);
+                continue;
+            }
             // 校验 fieldName ，有问题抛出异常
             String fieldName = modelInfo.getFieldName();
             // isBlank 为 true 表示 对象 == null 或 去掉首尾空白字串为空串
@@ -187,7 +200,7 @@ public class MataValidator {
             // isEmpty 为 true 表示 对象 == null 或 对象 == 空串
             // isEmpty 为 false 表示 对象 != null 且 对象 != 空串
             if (StrUtil.isEmpty(modelInfoType)) {
-                modelInfo.setType("String");
+                modelInfo.setType(ModelTypeEnum.STRING.getValue());
             }
         }
     }
