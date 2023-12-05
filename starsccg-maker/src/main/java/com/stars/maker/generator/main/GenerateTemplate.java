@@ -80,6 +80,9 @@ public class GenerateTemplate {
      * @throws TemplateException
      */
     protected void generateCode(Meta meta, String outputPath) throws IOException, TemplateException {
+        // 输出路径格式标准化
+        outputPath = outputPath.replaceAll("\\\\", "/");
+
         // 读取 resources 目录
         ClassPathResource classPathResource = new ClassPathResource("");
         // 获取 resources 目录的绝对路径
@@ -89,9 +92,9 @@ public class GenerateTemplate {
         // com.stars
         String outputBasePackage = meta.getBasePackage();
         // com/stars
-        String outputBasePackagePath = StrUtil.join("\\", StrUtil.split(outputBasePackage, "."));
+        String outputBasePackagePath = outputBasePackage.replaceAll(".", "/");
         // generated/src/main/java/com/stars
-        String outputBaseJavaPackagePath = outputPath + File.separator + "src\\main\\java\\" + outputBasePackagePath;
+        String outputBaseJavaPackagePath = outputPath + File.separator + "src/main/java/" + outputBasePackagePath;
 
         // 声明输入输出路径
         String inputFilePath;
@@ -100,37 +103,31 @@ public class GenerateTemplate {
         // 生成 model.DataModel.java 文件
         inputFilePath = inputResourcePath + "templates/java/model/DataModel.java.ftl";
         outputFilePath = outputBaseJavaPackagePath + File.separator + "model/DataModel.java";
-        outputFilePath = StrUtil.join("/", StrUtil.split(outputFilePath, "\\"));
         DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
 
         // 生成 cli.command.ConfigCommand.java 文件
         inputFilePath = inputResourcePath + "templates/java/cli/command/ConfigCommand.java.ftl";
         outputFilePath = outputBaseJavaPackagePath + File.separator + "cli/command/ConfigCommand.java";
-        outputFilePath = StrUtil.join("/", StrUtil.split(outputFilePath, "\\"));
         DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
 
         // 生成 cli.command.GenerateCommand.java 文件
         inputFilePath = inputResourcePath + "templates/java/cli/command/GenerateCommand.java.ftl";
         outputFilePath = outputBaseJavaPackagePath + File.separator + "cli/command/GenerateCommand.java";
-        outputFilePath = StrUtil.join("/", StrUtil.split(outputFilePath, "\\"));
         DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
 
         // 生成 cli.command.ListCommand.java 文件
         inputFilePath = inputResourcePath + "templates/java/cli/command/ListCommand.java.ftl";
         outputFilePath = outputBaseJavaPackagePath + File.separator + "cli/command/ListCommand.java";
-        outputFilePath = StrUtil.join("/", StrUtil.split(outputFilePath, "\\"));
         DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
 
         // 生成 cli.command.CommandExecutor.java 文件
         inputFilePath = inputResourcePath + "templates/java/cli/CommandExecutor.java.ftl";
         outputFilePath = outputBaseJavaPackagePath + File.separator + "cli/CommandExecutor.java";
-        outputFilePath = StrUtil.join("/", StrUtil.split(outputFilePath, "\\"));
         DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
 
         // 生成 Main.java 文件
         inputFilePath = inputResourcePath + "templates/java/Main.java.ftl";
         outputFilePath = outputBaseJavaPackagePath + File.separator + "Main.java";
-        outputFilePath = StrUtil.join("/", StrUtil.split(outputFilePath, "\\"));
         DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
 
         // 生成 generator.DynamicGenerator.java 文件
@@ -151,13 +148,11 @@ public class GenerateTemplate {
         // 生成 pom.xml.ftl 文件
         inputFilePath = inputResourcePath + "templates/java/pom.xml.ftl";
         outputFilePath = outputPath + File.separator + "pom.xml";
-        outputFilePath = StrUtil.join("/", StrUtil.split(outputFilePath, "\\"));
         DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
 
         // 生成 README.md.ftl 文件
         inputFilePath = inputResourcePath + "templates/java/README.md.ftl";
         outputFilePath = outputPath + File.separator + "README.md";
-        outputFilePath = StrUtil.join("/", StrUtil.split(outputFilePath, "\\"));
         DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
     }
 

@@ -38,21 +38,4 @@ public class FileGenerator {
                 + "acm-template/src/com/stars/acm/MainTemplate.java";
         DynamicFileGenerator.doGenerate(inputDynamicFilePath, outputDynamicFilePath, model);
     }
-
-    /**
-     * 入口函数
-     *
-     * @param args
-     * @throws TemplateException
-     * @throws IOException
-     */
-    public static void main(String[] args) throws TemplateException, IOException {
-//        // 创建数据模型对象
-//        DataModel dataModel = new DataModel();
-//        dataModel.author = "stars";
-//        dataModel.loop = false;
-//        dataModel.outputText = "求和结果：";
-//        // 生成文件
-//        FileGenerator.doGenerate(dataModel);
-    }
 }
