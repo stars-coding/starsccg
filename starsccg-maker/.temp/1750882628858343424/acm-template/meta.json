@@ -1,8 +1,8 @@
 {
     "name": "acm-template-generator",
-    "description": "ACM 代码生成器",
+    "description": "ACM 示例模板生成器",
     "fileConfig": {
-        "sourceRootPath": "D:/ABD/Desktop/Projects/starsccg-GIT/starsccg/starsccg-demo-projects/acm-template",
+        "sourceRootPath": "D:/ABD/Desktop/Projects/starsccg-GIT/starsccg/starsccg-maker/.temp/1750882628858343424/acm-template",
         "files": [
             {
                 "inputPath": "src/com/stars/acm/MainTemplate.java",
@@ -17,7 +17,7 @@
             {
                 "fieldName": "outputText",
                 "type": "String",
-                "defaultValue": "计算之和："
+                "defaultValue": "sum = "
             }
         ]
     }
