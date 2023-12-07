@@ -30,19 +30,20 @@ public class ScriptGenerator {
 
         StringBuilder stringBuilder;
 
-        // linux
+        // Linux
         stringBuilder = new StringBuilder();
         // 拼接字符串
         stringBuilder.append("#!/bin/bash").append("\n");
         stringBuilder.append(String.format("java -jar %s \"$@\"", jarPath)).append("\n");
         // 将字符串写入文件
         FileUtil.writeBytes(stringBuilder.toString().getBytes(StandardCharsets.UTF_8), outputPath);
-        // 添加可执行权限
+
+        // Linux 添加可执行权限
         try {
             Set<PosixFilePermission> permissions = PosixFilePermissions.fromString("rwxrwxrwx");
             Files.setPosixFilePermissions(Paths.get(outputPath), permissions);
         } catch (Exception e) {
-            // 防止 windows 下，执行报错
+            // 防止 windows 下执行报错
         }
 
         // windows
@@ -52,10 +53,5 @@ public class ScriptGenerator {
         stringBuilder.append(String.format("java -jar %s %%*", jarPath)).append("\n");
         // 将字符串写入文件
         FileUtil.writeBytes(stringBuilder.toString().getBytes(StandardCharsets.UTF_8), outputPath + ".bat");
-    }
-
-    public static void main(String[] args) throws IOException {
-        String outputPath = System.getProperty("user.dir") + File.separator + "generator";
-        ScriptGenerator.doGenerate(outputPath, "");
     }
 }

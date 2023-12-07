@@ -42,7 +42,7 @@ public class MataValidator {
         // 校验并填充默认值
         String name = StrUtil.blankToDefault(meta.getName(), "my-generator");
         meta.setName(name);
-        String description = StrUtil.emptyToDefault(meta.getDescription(), "我的模板代码生成器");
+        String description = StrUtil.emptyToDefault(meta.getDescription(), "我的代码生成器");
         meta.setDescription(description);
         String basePackage = StrUtil.blankToDefault(meta.getBasePackage(), "com.stars");
         meta.setBasePackage(basePackage);
@@ -67,8 +67,8 @@ public class MataValidator {
         }
         // 校验 sourceRootPath ，有问题抛出异常
         String sourceRootPath = fileConfig.getSourceRootPath();
-        // isBlank 为 true 表示 对象 == null 或 去掉首尾空白字串为空串
-        // isBlank 为 false 表示 对象 != null 且 去掉首尾空白字串不为空串
+        // isBlank 为 true 表示 对象 == null 或 空串 或 去掉首尾空白字串后为空串
+        // isBlank 为 false 表示 对象 != null 且 不为空串 且 去掉首尾空白字串后不为空串
         if (StrUtil.isBlank(sourceRootPath)) {
             throw new MetaException("未填写 sourceRootPath");
         }
@@ -87,16 +87,12 @@ public class MataValidator {
         // outputRootPath 默认为当前路径下的 generated
         String outputRootPath = fileConfig.getOutputRootPath();
         String defaultOutputRootPath = "generated";
-        // isEmpty 为 true 表示 对象 == null 或 对象 == 空串
-        // isEmpty 为 false 表示 对象 != null 且 对象 != 空串
         if (StrUtil.isEmpty(outputRootPath)) {
             fileConfig.setOutputRootPath(defaultOutputRootPath);
         }
         // 校验 fileConfigType ，有问题抛设置默认值
         String fileConfigType = fileConfig.getType();
         String defaultType = FileTypeEnum.DIR.getValue();
-        // isEmpty 为 true 表示 对象 == null 或 对象 == 空串
-        // isEmpty 为 false 表示 对象 != null 且 对象 != 空串
         if (StrUtil.isEmpty(fileConfigType)) {
             fileConfig.setType(defaultType);
         }
@@ -115,24 +111,18 @@ public class MataValidator {
             }
             // 校验 inputPath ，有问题抛出异常
             String inputPath = fileInfo.getInputPath();
-            // isBlank 为 true 表示 对象 == null 或 去掉首尾空白字串为空串
-            // isBlank 为 false 表示 对象 != null 且 去掉首尾空白字串不为空串
             if (StrUtil.isBlank(inputPath)) {
                 throw new MetaException("未填写 inputPath");
             }
             // 校验 outputPath ，有问题抛设置默认值
             // todo 动态动态生成文件时，存在模板文件与原始文件在路径上存在的差异
             String outputPath = fileInfo.getOutputPath();
-            // isEmpty 为 true 表示 对象 == null 或 对象 == 空串
-            // isEmpty 为 false 表示 对象 != null 且 对象 != 空串
             if (StrUtil.isEmpty(outputPath)) {
                 fileInfo.setOutputPath(inputPath);
             }
             // 校验 type ，有问题依据路径设置默认值
             // type：默认 inputPath 有文件后缀为 file，否则为 dir
             type = fileInfo.getType();
-            // isBlank 为 true 表示 对象 == null 或 去掉首尾空白字串为空串
-            // isBlank 为 false 表示 对象 != null 且 去掉首尾空白字串不为空串
             if (StrUtil.isBlank(type)) {
                 // 有无文件后缀
                 if (StrUtil.isBlank(FileUtil.getSuffix(inputPath))) {
@@ -144,8 +134,6 @@ public class MataValidator {
             // 校验 generateType ，有问题依据路径设置默认值
             // generateType：如果文件结尾不为 *.ftl ，默认为 static，否则为 dynamic
             String generateType = fileInfo.getGenerateType();
-            // isBlank 为 true 表示 对象 == null 或 去掉首尾空白字串为空串
-            // isBlank 为 false 表示 对象 != null 且 去掉首尾空白字串不为空串
             if (StrUtil.isBlank(generateType)) {
                 // 是否为动态模板
                 if (inputPath.endsWith(".ftl")) {
@@ -170,13 +158,11 @@ public class MataValidator {
         }
         // 校验 modelInfoList ，为空直接返回
         List<Meta.ModelConfig.ModelInfo> modelInfoList = modelConfig.getModels();
-        // isNotEmpty 为 true 表示 list != null 且 list 有元素
-        // isNotEmpty 为 false 表示 list == null 或 list 无元素
         if (!CollectionUtil.isNotEmpty(modelInfoList)) {
             return;
         }
         for (Meta.ModelConfig.ModelInfo modelInfo : modelInfoList) {
-            // 类型为 group ，不进行校验
+            // 类型为 group ，进行校验
             String groupKey = modelInfo.getGroupKey();
             if (StrUtil.isNotEmpty(groupKey)) {
                 // 生成中间参数
@@ -189,16 +175,12 @@ public class MataValidator {
             }
             // 校验 fieldName ，有问题抛出异常
             String fieldName = modelInfo.getFieldName();
-            // isBlank 为 true 表示 对象 == null 或 去掉首尾空白字串为空串
-            // isBlank 为 false 表示 对象 != null 且 去掉首尾空白字串不为空串
             if (StrUtil.isBlank(fieldName)) {
                 throw new MetaException("未填写 fieldName");
             }
             // 校验 modelInfoType ，有问题赋默认值
             // todo 如果碰到布尔类型怎么办？
             String modelInfoType = modelInfo.getType();
-            // isEmpty 为 true 表示 对象 == null 或 对象 == 空串
-            // isEmpty 为 false 表示 对象 != null 且 对象 != 空串
             if (StrUtil.isEmpty(modelInfoType)) {
                 modelInfo.setType(ModelTypeEnum.STRING.getValue());
             }

@@ -21,4 +21,17 @@ public class MainGenerator extends GenerateTemplate {
         MainGenerator mainGenerator = new MainGenerator();
         mainGenerator.doGenerate();
     }
+
+    /**
+     * 构建产物
+     *
+     * @param outputPath
+     * @param sourceCopyDestPath
+     * @param jarPath
+     * @param shellOutputFilePath
+     */
+    @Override
+    protected void buildDist(String outputPath, String sourceCopyDestPath, String jarPath, String shellOutputFilePath) {
+        System.out.println("没有生成精简包");
+    }
 }

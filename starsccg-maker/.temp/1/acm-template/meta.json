@@ -2,7 +2,7 @@
     "name": "acm-template-generator",
     "description": "ACM 示例模板生成器",
     "fileConfig": {
-        "sourceRootPath": "D:/ABD/Desktop/Projects/starsccg-GIT/starsccg/starsccg-maker/.temp/1750882628858343424/acm-template",
+        "sourceRootPath": "D:/ABD/Desktop/Projects/starsccg-GIT/starsccg/starsccg-maker/.temp/1/acm-template",
         "files": [
             {
                 "inputPath": "src/com/stars/acm/MainTemplate.java",
@@ -14,6 +14,10 @@
     },
     "modelConfig": {
         "models": [
+            {
+                "fieldName": "className",
+                "type": "String"
+            },
             {
                 "fieldName": "outputText",
                 "type": "String",

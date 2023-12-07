@@ -43,14 +43,7 @@ public class DynamicFileGenerator {
 
         // 创建模板对象，加载指定模板
         String templateName = new File(inputPath).getName();
-//        Template template = configuration.getTemplate(templateName);
         Template template = configuration.getTemplate(templateName, "UTF-8");
-
-        // 创建数据模型
-//        DataModel mainTemplateConfig = new DataModel();
-//        mainTemplateConfig.setAuthor("stars");
-//        mainTemplateConfig.setLoop(false);
-//        mainTemplateConfig.setOutputText("求和结果：");
 
         // 如果文件不存在，则新建文件
         if (!FileUtil.exist(outputPath)) {
@@ -58,7 +51,6 @@ public class DynamicFileGenerator {
         }
 
         // 生成文件，指定最终的文件名称
-//        Writer out = new FileWriter(outputPath);
         BufferedWriter out =
                 new BufferedWriter(new OutputStreamWriter(Files.newOutputStream(Paths.get(outputPath)), StandardCharsets.UTF_8));
         template.process(model, out);

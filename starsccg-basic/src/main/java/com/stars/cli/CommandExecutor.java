@@ -8,6 +8,7 @@ import picocli.CommandLine.Command;
 
 /**
  * 命令执行器
+ * 仅用来绑定子命令，无实际命令
  *
  * @author stars
  * @version 1.0.0
@@ -17,6 +18,7 @@ public class CommandExecutor implements Runnable {
 
     private final CommandLine commandLine;
 
+    // 利用代码块，全局仅执行一次
     {
         this.commandLine = new CommandLine(this)
                 .addSubcommand(new GenerateCommand())

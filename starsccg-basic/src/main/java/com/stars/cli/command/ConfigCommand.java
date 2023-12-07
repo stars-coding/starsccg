@@ -18,6 +18,7 @@ public class ConfigCommand implements Runnable {
 
     @Override
     public void run() {
+        // 为提高程序可维护性，不使用手动编写硬代码，选择使用反射机制，动态获取
         // 实现 config 命令的逻辑
         System.out.println("查看参数信息");
 

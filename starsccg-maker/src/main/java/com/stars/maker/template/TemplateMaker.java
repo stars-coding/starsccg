@@ -36,20 +36,20 @@ public class TemplateMaker {
         String projectPath = System.getProperty("user.dir");
         String originProjectPath = new File(projectPath).getParent() + File.separator + "starsccg-demo-projects/acm-template";
         String inputFilePath = "src/com/stars/acm/MainTemplate.java";
-        // 模型参数信息（首次）
-        Meta.ModelConfig.ModelInfo modelInfo = new Meta.ModelConfig.ModelInfo();
-        modelInfo.setFieldName("outputText");
-        modelInfo.setType("String");
-        modelInfo.setDefaultValue("sum = ");
-        // 模型参数信息（第二次）
+//        // 模型参数信息（首次）
 //        Meta.ModelConfig.ModelInfo modelInfo = new Meta.ModelConfig.ModelInfo();
-//        modelInfo.setFieldName("className");
+//        modelInfo.setFieldName("outputText");
 //        modelInfo.setType("String");
-        // 替换变量（首次）
-        String searchStr = "Sum: ";
+//        modelInfo.setDefaultValue("sum = ");
+//        // 替换变量（首次）
+//        String searchStr = "Sum: ";
+        // 模型参数信息（第二次）
+        Meta.ModelConfig.ModelInfo modelInfo = new Meta.ModelConfig.ModelInfo();
+        modelInfo.setFieldName("className");
+        modelInfo.setType("String");
         // 替换变量（第二次）
-//        String searchStr = "MainTemplate";
-        long id = makeTemplate(meta, originProjectPath, inputFilePath, modelInfo, searchStr, null);
+        String searchStr = "MainTemplate";
+        long id = makeTemplate(meta, originProjectPath, inputFilePath, modelInfo, searchStr, 1L);
         System.out.println(id);
     }
 

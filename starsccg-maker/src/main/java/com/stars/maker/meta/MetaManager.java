@@ -1,6 +1,5 @@
 package com.stars.maker.meta;
 
-import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.json.JSONUtil;
 

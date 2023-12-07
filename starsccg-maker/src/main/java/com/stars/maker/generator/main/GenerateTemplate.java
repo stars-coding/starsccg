@@ -2,7 +2,6 @@ package com.stars.maker.generator.main;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ClassPathResource;
-import cn.hutool.core.util.StrUtil;
 import com.stars.maker.generator.JarGenerator;
 import com.stars.maker.generator.ScriptGenerator;
 import com.stars.maker.generator.file.DynamicFileGenerator;
@@ -19,7 +18,7 @@ import java.io.IOException;
  * @author stars
  * @version 1.0.0
  */
-public class GenerateTemplate {
+public abstract class GenerateTemplate {
 
     /**
      * 生成
@@ -40,13 +39,13 @@ public class GenerateTemplate {
             FileUtil.mkdir(outputPath);
         }
 
-        // 1、复制源文件
+        // 1、复制源文件，复制最终想要生成的代码及模板至代码生成器项目目录下
         String sourceCopyDestPath = this.copySource(meta, outputPath);
 
-        // 2、生成代码
+        // 2、生成代码，生成代码生成器的项目代码
         this.generateCode(meta, outputPath);
 
-        // 3、构建 jar 包
+        // 3、构建 jar 包，将生成的代码生成器项目代码构建为 jar 包
         String jarPath = this.buildJar(meta, outputPath);
 
         // 4、封装脚本
@@ -64,8 +63,9 @@ public class GenerateTemplate {
      * @return
      */
     protected String copySource(Meta meta, String outputPath) {
-        // 将源模板文件复制到代码生成器项目中
+        // 源代码及模板在代码生成器制作工具项目下的路径
         String sourceRootPath = meta.getFileConfig().getSourceRootPath();
+        // 将源代码及模板拷贝到代码生成器项目下的路径
         String sourceCopyDestPath = outputPath + File.separator + ".source";
         FileUtil.copy(sourceRootPath, sourceCopyDestPath, false);
         return sourceCopyDestPath;

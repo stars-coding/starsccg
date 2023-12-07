@@ -42,35 +42,35 @@
   "modelConfig": {
     "models": [
       {
-        "fieldName": "needGit",
         "type": "boolean",
+        "fieldName": "needGit",
         "description": "是否生成 .gitignore 文件",
         "defaultValue": true
       },
       {
-        "fieldName": "loop",
         "type": "boolean",
+        "fieldName": "loop",
         "description": "是否生成循环",
         "defaultValue": true,
         "abbr": "l"
       },
       {
-        "groupKey": "mainTemplate",
-        "groupName": "核心模板",
         "type": "MainTemplate",
+        "groupName": "核心模板",
+        "groupKey": "mainTemplate",
         "description": "用于生成核心模板文件",
         "condition": "loop",
         "models": [
           {
-            "fieldName": "author",
             "type": "String",
+            "fieldName": "author",
             "description": "作者注释",
             "defaultValue": "stars",
             "abbr": "a"
           },
           {
-            "fieldName": "outputText",
             "type": "String",
+            "fieldName": "outputText",
             "description": "输出信息",
             "defaultValue": "sum = ",
             "abbr": "o"
