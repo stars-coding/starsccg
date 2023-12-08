@@ -13,6 +13,7 @@ import com.stars.maker.meta.enums.FileTypeEnum;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,7 +38,9 @@ public class TemplateMaker {
         // 源项目路径，用户传入的源项目的路径
         String originProjectPath = new File(projectPath).getParent() + File.separator + "starsccg-demo-projects/springboot-init";
         // 输入文件路径，在源项目路径下的相对路径
-        String inputFilePath = "src/main/java/com/stars/springbootinit";
+        String inputFilePath1 = "src/main/java/com/stars/springbootinit/common";
+        String inputFilePath2 = "src/main/java/com/stars/springbootinit/controller";
+        List<String> inputFilePathList = Arrays.asList(inputFilePath1, inputFilePath2);
 //        // 模型参数信息（首次）
 //        Meta.ModelConfig.ModelInfo modelInfo = new Meta.ModelConfig.ModelInfo();
 //        modelInfo.setFieldName("outputText");
@@ -51,7 +54,7 @@ public class TemplateMaker {
         modelInfo.setType("String");
         // 替换变量（第二次）
         String searchStr = "BaseResponse";
-        long id = makeTemplate(meta, originProjectPath, inputFilePath, modelInfo, searchStr, 100L);
+        long id = makeTemplate(meta, originProjectPath, inputFilePathList, modelInfo, searchStr, 100L);
         System.out.println(id);
     }
 
@@ -60,13 +63,13 @@ public class TemplateMaker {
      *
      * @param newMeta
      * @param originProjectPath
-     * @param inputFilePath
+     * @param inputFilePathList
      * @param modelInfo
      * @param searchStr
      * @param id
      * @return
      */
-    public static long makeTemplate(Meta newMeta, String originProjectPath, String inputFilePath,
+    public static long makeTemplate(Meta newMeta, String originProjectPath, List<String> inputFilePathList,
                                     Meta.ModelConfig.ModelInfo modelInfo, String searchStr, Long id) {
         // 没有 id 则生成 id
         if (id == null) {
@@ -94,19 +97,21 @@ public class TemplateMaker {
         // 二、生成文件模板
         // 输入文件为目录
         List<Meta.FileConfig.FileInfo> newFileInfoList = new ArrayList<>();
-        String inputFileAbsolutePath = sourceRootPath + File.separator + inputFilePath;
-        if (FileUtil.isDirectory(inputFileAbsolutePath)) {
-            // 输入的是目录
-            List<File> fileList = FileUtil.loopFiles(inputFileAbsolutePath);
-            for (File file : fileList) {
+        for (String inputFilePath : inputFilePathList) {
+            String inputFileAbsolutePath = sourceRootPath + File.separator + inputFilePath;
+            if (FileUtil.isDirectory(inputFileAbsolutePath)) {
+                // 输入的是目录
+                List<File> fileList = FileUtil.loopFiles(inputFileAbsolutePath);
+                for (File file : fileList) {
+                    Meta.FileConfig.FileInfo fileInfo = makeFileTemplate(file, sourceRootPath, modelInfo, searchStr);
+                    newFileInfoList.add(fileInfo);
+                }
+            } else {
+                // 输入的是文件
+                File file = new File(inputFileAbsolutePath);
                 Meta.FileConfig.FileInfo fileInfo = makeFileTemplate(file, sourceRootPath, modelInfo, searchStr);
                 newFileInfoList.add(fileInfo);
             }
-        } else {
-            // 输入的是文件
-            File file = new File(inputFileAbsolutePath);
-            Meta.FileConfig.FileInfo fileInfo = makeFileTemplate(file, sourceRootPath, modelInfo, searchStr);
-            newFileInfoList.add(fileInfo);
         }
 
         // 三、生成配置文件
