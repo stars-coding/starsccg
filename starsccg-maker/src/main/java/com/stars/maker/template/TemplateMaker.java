@@ -50,7 +50,7 @@ public class TemplateMaker {
         modelInfo.setFieldName("className");
         modelInfo.setType("String");
         // 替换变量（第二次）
-        String searchStr = "MainTemplate";
+        String searchStr = "BaseResponse";
         long id = makeTemplate(meta, originProjectPath, inputFilePath, modelInfo, searchStr, 100L);
         System.out.println(id);
     }
@@ -173,14 +173,22 @@ public class TemplateMaker {
         String replacement = String.format("${%s}", modelInfo.getFieldName());
         // 开始替换，生成新的文件内容
         String newFileContent = StrUtil.replace(fileContent, searchStr, replacement);
-        // 输出模板文件
-        FileUtil.writeUtf8String(newFileContent, fileOutputAbsolutePath);
         // 文件配置信息
         Meta.FileConfig.FileInfo fileInfo = new Meta.FileConfig.FileInfo();
         fileInfo.setInputPath(fileInputPath);
-        fileInfo.setOutputPath(fileOutputPath);
         fileInfo.setType(FileTypeEnum.FILE.getValue());
-        fileInfo.setGenerateType(FileGenerateTypeEnum.DYNAMIC.getValue());
+        // 与原文件一致，没有改变，则为静态文件
+        if (newFileContent.equals(fileContent)) {
+            // 输出路径 = 输入路径
+            fileInfo.setOutputPath(fileInputPath);
+            // 静态文件
+            fileInfo.setGenerateType(FileGenerateTypeEnum.STATIC.getValue());
+        } else {
+            // 动态文件
+            fileInfo.setGenerateType(FileGenerateTypeEnum.DYNAMIC.getValue());
+            // 输出模板文件
+            FileUtil.writeUtf8String(newFileContent, fileOutputAbsolutePath);
+        }
         return fileInfo;
     }
 
