@@ -9,6 +9,10 @@ import cn.hutool.json.JSONUtil;
 import com.stars.maker.meta.Meta;
 import com.stars.maker.meta.enums.FileGenerateTypeEnum;
 import com.stars.maker.meta.enums.FileTypeEnum;
+import com.stars.maker.template.enums.FileFilterRangeEnum;
+import com.stars.maker.template.enums.FileFilterRuleEnum;
+import com.stars.maker.template.model.FileFilterConfig;
+import com.stars.maker.template.model.TemplateMakerFileConfig;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -54,7 +58,22 @@ public class TemplateMaker {
         modelInfo.setType("String");
         // 替换变量（第二次）
         String searchStr = "BaseResponse";
-        long id = makeTemplate(meta, originProjectPath, inputFilePathList, modelInfo, searchStr, 100L);
+        // 文件过滤
+        TemplateMakerFileConfig templateMakerFileConfig = new TemplateMakerFileConfig();
+        TemplateMakerFileConfig.FileInfoConfig fileInfoConfig1 = new TemplateMakerFileConfig.FileInfoConfig();
+        fileInfoConfig1.setPath(inputFilePath1);
+        List<FileFilterConfig> fileFilterConfigList = new ArrayList<>();
+        FileFilterConfig fileFilterConfig = FileFilterConfig.builder()
+                .range(FileFilterRangeEnum.FILE_NAME.getValue())
+                .rule(FileFilterRuleEnum.CONTAINS.getValue())
+                .value("Base")
+                .build();
+        fileFilterConfigList.add(fileFilterConfig);
+        fileInfoConfig1.setFilterConfigList(fileFilterConfigList);
+        TemplateMakerFileConfig.FileInfoConfig fileInfoConfig2 = new TemplateMakerFileConfig.FileInfoConfig();
+        fileInfoConfig2.setPath(inputFilePath2);
+        templateMakerFileConfig.setFiles(Arrays.asList(fileInfoConfig1, fileInfoConfig2));
+        long id = makeTemplate(meta, originProjectPath, templateMakerFileConfig, modelInfo, searchStr, 100L);
         System.out.println(id);
     }
 
@@ -63,13 +82,13 @@ public class TemplateMaker {
      *
      * @param newMeta
      * @param originProjectPath
-     * @param inputFilePathList
+     * @param templateMakerFileConfig
      * @param modelInfo
      * @param searchStr
      * @param id
      * @return
      */
-    public static long makeTemplate(Meta newMeta, String originProjectPath, List<String> inputFilePathList,
+    public static long makeTemplate(Meta newMeta, String originProjectPath, TemplateMakerFileConfig templateMakerFileConfig,
                                     Meta.ModelConfig.ModelInfo modelInfo, String searchStr, Long id) {
         // 没有 id 则生成 id
         if (id == null) {
@@ -95,20 +114,18 @@ public class TemplateMaker {
         sourceRootPath = sourceRootPath.replaceAll("\\\\", "/");
 
         // 二、生成文件模板
-        // 输入文件为目录
+        List<TemplateMakerFileConfig.FileInfoConfig> fileInfoConfigList = templateMakerFileConfig.getFiles();
+        // 遍历输入文件
         List<Meta.FileConfig.FileInfo> newFileInfoList = new ArrayList<>();
-        for (String inputFilePath : inputFilePathList) {
-            String inputFileAbsolutePath = sourceRootPath + File.separator + inputFilePath;
-            if (FileUtil.isDirectory(inputFileAbsolutePath)) {
-                // 输入的是目录
-                List<File> fileList = FileUtil.loopFiles(inputFileAbsolutePath);
-                for (File file : fileList) {
-                    Meta.FileConfig.FileInfo fileInfo = makeFileTemplate(file, sourceRootPath, modelInfo, searchStr);
-                    newFileInfoList.add(fileInfo);
-                }
-            } else {
-                // 输入的是文件
-                File file = new File(inputFileAbsolutePath);
+        for (TemplateMakerFileConfig.FileInfoConfig fileInfoConfig : fileInfoConfigList) {
+            String inputFilePath = fileInfoConfig.getPath();
+            // 如果是相对路径，需要改为绝对路径
+            if (!inputFilePath.startsWith(sourceRootPath)) {
+                inputFilePath = sourceRootPath + File.separator + inputFilePath;
+            }
+            // 获取过滤后的文件列表（不可能存在目录）
+            List<File> fileList = FileFilter.doFilter(inputFilePath, fileInfoConfig.getFilterConfigList());
+            for (File file : fileList) {
                 Meta.FileConfig.FileInfo fileInfo = makeFileTemplate(file, sourceRootPath, modelInfo, searchStr);
                 newFileInfoList.add(fileInfo);
             }
@@ -151,10 +168,10 @@ public class TemplateMaker {
     /**
      * 制作文件模板
      *
+     * @param inputFile
+     * @param sourceRootPath
      * @param modelInfo
      * @param searchStr
-     * @param sourceRootPath
-     * @param inputFile
      * @return
      */
     private static Meta.FileConfig.FileInfo makeFileTemplate(File inputFile, String sourceRootPath,
