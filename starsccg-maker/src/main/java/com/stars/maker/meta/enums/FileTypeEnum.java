@@ -1,11 +1,14 @@
 package com.stars.maker.meta.enums;
 
+import lombok.Getter;
+
 /**
  * 文件类型枚举
  *
  * @author stars
  * @version 1.0.0
  */
+@Getter
 public enum FileTypeEnum {
 
     DIR("目录", "dir"),
@@ -19,13 +22,5 @@ public enum FileTypeEnum {
     FileTypeEnum(String text, String value) {
         this.text = text;
         this.value = value;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public String getValue() {
-        return value;
     }
 }

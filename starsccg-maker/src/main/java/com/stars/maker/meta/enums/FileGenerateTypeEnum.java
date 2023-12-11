@@ -1,11 +1,14 @@
 package com.stars.maker.meta.enums;
 
+import lombok.Getter;
+
 /**
  * 文件生成类型枚举
  *
  * @author stars
  * @version 1.0.0
  */
+@Getter
 public enum FileGenerateTypeEnum {
 
     DYNAMIC("动态", "dynamic"),
@@ -18,13 +21,5 @@ public enum FileGenerateTypeEnum {
     FileGenerateTypeEnum(String text, String value) {
         this.text = text;
         this.value = value;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public String getValue() {
-        return value;
     }
 }

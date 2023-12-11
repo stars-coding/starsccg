@@ -21,11 +21,11 @@ public class FileFilter {
     /**
      * 单个文件过滤
      *
-     * @param fileFilterConfigList
      * @param file
+     * @param fileFilterConfigList
      * @return
      */
-    public static boolean doSingleFileFilter(List<FileFilterConfig> fileFilterConfigList, File file) {
+    public static boolean doSingleFileFilter(File file, List<FileFilterConfig> fileFilterConfigList) {
         // 所有过滤器校验结束的结果
         boolean result = true;
         if (CollUtil.isEmpty(fileFilterConfigList)) {
@@ -98,7 +98,7 @@ public class FileFilter {
         // 根据路径获取所有文件
         List<File> fileList = FileUtil.loopFiles(filePath);
         return fileList.stream()
-                .filter(file -> FileFilter.doSingleFileFilter(fileFilterConfigList, file))
+                .filter(file -> FileFilter.doSingleFileFilter(file, fileFilterConfigList))
                 .collect(Collectors.toList());
     }
 }
