@@ -1,0 +1,24 @@
+{
+  "meta": {
+    "name": "acm-template-pro-generator",
+    "description": "ACM 代码生成器"
+  },
+  "originProjectPath": "../../../starsccg-demo-projects/springboot-init",
+  "fileConfig": {
+    "files": [
+      {
+        "path": "src/main/java/com/stars/springbootinit/common"
+      }
+    ]
+  },
+  "modelConfig": {
+    "models": [
+      {
+        "fieldName": "className",
+        "type": "String",
+        "defaultValue": true,
+        "replaceText": "BaseResponse"
+      }
+    ]
+  }
+}
