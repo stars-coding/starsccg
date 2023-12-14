@@ -217,7 +217,8 @@ public class TemplateMaker {
 
         // 文件配置信息
         Meta.FileConfig.FileInfo fileInfo = new Meta.FileConfig.FileInfo();
-        fileInfo.setInputPath(fileInputPath);
+        fileInfo.setInputPath(fileOutputPath);
+        fileInfo.setOutputPath(fileInputPath);
         fileInfo.setType(FileTypeEnum.FILE.getValue());
         fileInfo.setGenerateType(FileGenerateTypeEnum.DYNAMIC.getValue());
 
@@ -226,10 +227,9 @@ public class TemplateMaker {
         // 之前不存在模板文件，并且没有更改文件内容，则为静态生成
         if (!hasTemplateFile && contentEquals) {
             // 输出路径 = 输入路径
-            fileInfo.setOutputPath(fileInputPath);
+            fileInfo.setInputPath(fileInputPath);
             fileInfo.setGenerateType(FileGenerateTypeEnum.STATIC.getValue());
         } else {
-            fileInfo.setOutputPath(fileOutputPath);
             // 有模板文件，或者文件内容发生变化，生成模板文件
             FileUtil.writeUtf8String(newFileContent, fileOutputAbsolutePath);
         }
@@ -259,7 +259,7 @@ public class TemplateMaker {
             List<Meta.FileConfig.FileInfo> newFileInfoList = new ArrayList<>(tempFileInfoList.stream()
                     .flatMap(fileInfo -> fileInfo.getFiles().stream())
                     .collect(
-                            Collectors.toMap(Meta.FileConfig.FileInfo::getInputPath, o -> o, (e, r) -> r)
+                            Collectors.toMap(Meta.FileConfig.FileInfo::getOutputPath, o -> o, (e, r) -> r)
                     ).values());
             // 使用新的 group 配置
             Meta.FileConfig.FileInfo newFileInfo = CollUtil.getLast(tempFileInfoList);
@@ -276,7 +276,7 @@ public class TemplateMaker {
                 .collect(Collectors.toList());
         resultList.addAll(new ArrayList<>(noGroupFileInfoList.stream()
                 .collect(
-                        Collectors.toMap(Meta.FileConfig.FileInfo::getInputPath, o -> o, (e, r) -> r)
+                        Collectors.toMap(Meta.FileConfig.FileInfo::getOutputPath, o -> o, (e, r) -> r)
                 ).values()));
         return resultList;
     }
