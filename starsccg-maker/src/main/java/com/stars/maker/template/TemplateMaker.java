@@ -105,6 +105,11 @@ public class TemplateMaker {
             }
             // 获取过滤后的文件列表（不可能存在目录）
             List<File> fileList = FileFilter.doFilter(inputFilePath, fileInfoConfig.getFilterConfigList());
+            // 不处理已生成的 FTL 模板文件
+            fileList = fileList
+                    .stream()
+                    .filter(file -> !file.getAbsolutePath().endsWith(".ftl"))
+                    .collect(Collectors.toList());
             for (File file : fileList) {
                 Meta.FileConfig.FileInfo fileInfo = makeFileTemplate(file, sourceRootPath, templateMakerModelConfig);
                 newFileInfoList.add(fileInfo);
@@ -224,6 +229,7 @@ public class TemplateMaker {
             fileInfo.setOutputPath(fileInputPath);
             fileInfo.setGenerateType(FileGenerateTypeEnum.STATIC.getValue());
         } else {
+            fileInfo.setOutputPath(fileOutputPath);
             // 有模板文件，或者文件内容发生变化，生成模板文件
             FileUtil.writeUtf8String(newFileContent, fileOutputAbsolutePath);
         }
