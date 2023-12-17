@@ -51,7 +51,12 @@ public class TemplateMakerTest {
         fileInfoConfig1.setPath(inputFilePath1);
         templateMakerFileConfig.setFiles(Arrays.asList(fileInfoConfig1));
 
-        long id = TemplateMaker.makeTemplate(meta, originProjectPath, templateMakerFileConfig, templateMakerModelConfig, 1L);
+        long id = TemplateMaker.makeTemplate(meta,
+                originProjectPath,
+                templateMakerFileConfig,
+                templateMakerModelConfig,
+                null,
+                1L);
         System.out.println(id);
     }
 
@@ -85,7 +90,12 @@ public class TemplateMakerTest {
         fileInfoConfig1.setPath(inputFilePath1);
         templateMakerFileConfig.setFiles(Arrays.asList(fileInfoConfig1));
 
-        long id = TemplateMaker.makeTemplate(meta, originProjectPath, templateMakerFileConfig, templateMakerModelConfig, 1L);
+        long id = TemplateMaker.makeTemplate(meta,
+                originProjectPath,
+                templateMakerFileConfig,
+                templateMakerModelConfig,
+                null,
+                1L);
         System.out.println(id);
     }
 
@@ -119,7 +129,12 @@ public class TemplateMakerTest {
         fileInfoConfig1.setPath(inputFilePath1);
         templateMakerFileConfig.setFiles(Arrays.asList(fileInfoConfig1));
 
-        long id = TemplateMaker.makeTemplate(meta, originProjectPath, templateMakerFileConfig, templateMakerModelConfig, 1L);
+        long id = TemplateMaker.makeTemplate(meta,
+                originProjectPath,
+                templateMakerFileConfig,
+                templateMakerModelConfig,
+                null,
+                1L);
         System.out.println(id);
     }
 
