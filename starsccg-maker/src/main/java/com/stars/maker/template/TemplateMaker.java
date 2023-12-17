@@ -141,10 +141,12 @@ public class TemplateMaker {
      * @param inputFile
      * @param sourceRootPath
      * @param templateMakerModelConfig
+     * @param fileInfoConfig
      * @return
      */
     private static Meta.FileConfig.FileInfo makeFileTemplate(File inputFile, String sourceRootPath,
-                                                             TemplateMakerModelConfig templateMakerModelConfig) {
+                                                             TemplateMakerModelConfig templateMakerModelConfig,
+                                                             TemplateMakerFileConfig.FileInfoConfig fileInfoConfig) {
         // 要挖坑的文件绝对路径（用于制作模板）
         // 注意 Win 系统需要对路径进行转义
         String fileInputAbsolutePath = inputFile.getAbsolutePath().replaceAll("\\\\", "/");
@@ -187,6 +189,7 @@ public class TemplateMaker {
         // 注意文件输入路径要和输出路径反转
         fileInfo.setInputPath(fileOutputPath);
         fileInfo.setOutputPath(fileInputPath);
+        fileInfo.setCondition(fileInfoConfig.getCondition());
         fileInfo.setType(FileTypeEnum.FILE.getValue());
         fileInfo.setGenerateType(FileGenerateTypeEnum.DYNAMIC.getValue());
 
@@ -239,7 +242,7 @@ public class TemplateMaker {
                     .filter(file -> !file.getAbsolutePath().endsWith(".ftl"))
                     .collect(Collectors.toList());
             for (File file : fileList) {
-                Meta.FileConfig.FileInfo fileInfo = makeFileTemplate(file, sourceRootPath, templateMakerModelConfig);
+                Meta.FileConfig.FileInfo fileInfo = makeFileTemplate(file, sourceRootPath, templateMakerModelConfig, fileInfoConfig);
                 newFileInfoList.add(fileInfo);
             }
         }
