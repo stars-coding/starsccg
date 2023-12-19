@@ -31,7 +31,7 @@ public class TemplateMakerTest {
 
         String projectPath = System.getProperty("user.dir");
         // 源项目路径，用户传入的源项目的路径
-        String originProjectPath = new File(projectPath).getParent() + File.separator + "starsccg-demo-projects/springboot-init";
+        String originProjectPath = new File(projectPath).getParent() + "/" + "starsccg-demo-projects/springboot-init";
         // 输入文件路径，在源项目路径下的相对路径
         String inputFilePath1 = "src/main/java/com/stars/springbootinit/common";
 
@@ -71,7 +71,7 @@ public class TemplateMakerTest {
 
         String projectPath = System.getProperty("user.dir");
         // 源项目路径，用户传入的源项目的路径
-        String originProjectPath = new File(projectPath).getParent() + File.separator + "starsccg-demo-projects/springboot-init";
+        String originProjectPath = new File(projectPath).getParent() + "/" + "starsccg-demo-projects/springboot-init";
         // 输入文件路径，在源项目路径下的相对路径
         String inputFilePath1 = "src/main/java/com/stars/springbootinit/common";
 
@@ -110,7 +110,7 @@ public class TemplateMakerTest {
 
         String projectPath = System.getProperty("user.dir");
         // 源项目路径，用户传入的源项目的路径
-        String originProjectPath = new File(projectPath).getParent() + File.separator + "starsccg-demo-projects/springboot-init";
+        String originProjectPath = new File(projectPath).getParent() + "/" + "starsccg-demo-projects/springboot-init";
         // 输入文件路径，在源项目路径下的相对路径
         String inputFilePath1 = "./";
 

@@ -1,5 +1,10 @@
 package com.stars.maker;
 
+import com.stars.maker.generator.main.MainGenerator;
+import freemarker.template.TemplateException;
+
+import java.io.IOException;
+
 /**
  * 主类（面向用户）
  *
@@ -13,11 +18,13 @@ public class Main {
      *
      * @param args
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException, TemplateException, IOException {
 //        args = new String[]{"generate", "-l", "-a", "-o"};
 //        args = new String[]{"config"};
 //        args = new String[]{"list"};
 //        CommandExecutor commandExecutor = new CommandExecutor();
 //        commandExecutor.doExecute(args);
+        MainGenerator mainGenerator = new MainGenerator();
+        mainGenerator.doGenerate();
     }
 }

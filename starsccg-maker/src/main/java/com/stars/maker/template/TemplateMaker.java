@@ -66,8 +66,8 @@ public class TemplateMaker {
 
         // 复制目录
         String projectPath = System.getProperty("user.dir");
-        String tempDirPath = projectPath + File.separator + ".temp";
-        String templatePath = tempDirPath + File.separator + id;
+        String tempDirPath = projectPath + "/" + ".temp";
+        String templatePath = tempDirPath + "/" + id;
 
         // 是否为首次制作模板
         // 目录不存在，则是首次制作
@@ -94,7 +94,7 @@ public class TemplateMaker {
         List<Meta.ModelConfig.ModelInfo> newModelInfoList = getModelInfoList(templateMakerModelConfig);
 
         // 三、生成配置文件
-        String metaOutputPath = templatePath + File.separator + "meta.json";
+        String metaOutputPath = templatePath + "/" + "meta.json";
         // 如果已有 meta 文件，说明不是第一次制作，则在 meta 基础上进行修改
         if (FileUtil.exist(metaOutputPath)) {
             Meta oldMeta = JSONUtil.toBean(FileUtil.readUtf8String(metaOutputPath), Meta.class);
@@ -234,7 +234,7 @@ public class TemplateMaker {
             String inputFilePath = fileInfoConfig.getPath();
             // 如果填的是相对路径，要改为绝对路径
             if (!inputFilePath.startsWith(sourceRootPath)) {
-                inputFilePath = sourceRootPath + File.separator + inputFilePath;
+                inputFilePath = sourceRootPath + "/" + inputFilePath;
             }
             // 获取过滤后的文件列表（不会存在目录）
             List<File> fileList = FileFilter.doFilter(inputFilePath, fileInfoConfig.getFilterConfigList());

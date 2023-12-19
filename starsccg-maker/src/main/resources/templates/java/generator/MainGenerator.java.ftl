@@ -34,8 +34,8 @@ public class MainGenerator {
      */
     public static void doGenerate(DataModel model) throws TemplateException, IOException {
         // 读取元信息输入输出根路径
-        String inputRootPath = "${fileConfig.inputRootPath}";
-        String outputRootPath = "${fileConfig.outputRootPath}";
+        String inputRootPath = "<#if fileConfig.inputRootPath??>${fileConfig.inputRootPath}</#if>";
+        String outputRootPath = "<#if fileConfig.outputRootPath??>${fileConfig.outputRootPath}</#if>";
 
         // 声明输入输出路径
         String inputPath;

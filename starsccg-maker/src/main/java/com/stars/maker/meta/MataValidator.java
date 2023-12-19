@@ -76,7 +76,7 @@ public class MataValidator {
         // inputRootPath 为 .source + sourceRootPath 的最后一个层级路径
         String inputRootPath = fileConfig.getInputRootPath();
         String defaultInputRootPath = ".source"
-                + File.separator
+                + "/"
                 + FileUtil.getLastPathEle(Paths.get(sourceRootPath)).getFileName().toString();
         // isEmpty 为 true 表示 对象 == null 或 对象 == 空串
         // isEmpty 为 false 表示 对象 != null 且 对象 != 空串
