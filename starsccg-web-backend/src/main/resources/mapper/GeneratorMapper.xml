@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.stars.web.mapper.GeneratorMapper">
+
+    <resultMap id="BaseResultMap" type="com.stars.web.model.entity.Generator">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="generatorName" column="generatorName" jdbcType="VARCHAR"/>
+        <result property="generatorDescription" column="generatorDescription" jdbcType="VARCHAR"/>
+        <result property="generatorAuthor" column="generatorAuthor" jdbcType="VARCHAR"/>
+        <result property="generatorVersion" column="generatorVersion" jdbcType="VARCHAR"/>
+        <result property="generatorBasePackage" column="generatorBasePackage" jdbcType="VARCHAR"/>
+        <result property="generatorPicture" column="generatorPicture" jdbcType="VARCHAR"/>
+        <result property="generatorTags" column="generatorTags" jdbcType="VARCHAR"/>
+        <result property="generatorFileConfig" column="generatorFileConfig" jdbcType="VARCHAR"/>
+        <result property="generatorModelConfig" column="generatorModelConfig" jdbcType="VARCHAR"/>
+        <result property="generatorDistPath" column="generatorDistPath" jdbcType="VARCHAR"/>
+        <result property="generatorStatus" column="generatorStatus" jdbcType="INTEGER"/>
+        <result property="generatorUserId" column="generatorUserId" jdbcType="BIGINT"/>
+        <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+        <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,generatorName,generatorDescription,
+        generatorAuthor,generatorVersion,generatorBasePackage,
+        generatorPicture,generatorTags,generatorFileConfig,
+        generatorModelConfig,generatorDistPath,generatorStatus,
+        generatorUserId,createTime,updateTime,
+        isDelete
+    </sql>
+</mapper>
