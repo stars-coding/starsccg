@@ -4,6 +4,8 @@ target
 *.iml
 *.ipr
 *.iws
+starsccg-web-backend/src/main/resources/application-dev.yml
+starsccg-web-backend/src/main/resources/application-prod.yml
 
 
 # Created by .ignore support plugin (hsz.mobi)

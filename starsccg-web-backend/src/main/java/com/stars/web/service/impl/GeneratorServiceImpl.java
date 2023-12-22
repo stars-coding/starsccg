@@ -143,11 +143,21 @@ public class GeneratorServiceImpl extends ServiceImpl<GeneratorMapper, Generator
 
         queryWrapper.like(StringUtils.isNotBlank(generatorName), "generatorName", generatorName);
         queryWrapper.like(StringUtils.isNotBlank(generatorDescription), "generatorDescription", generatorDescription);
+//
+//        if (CollUtil.isNotEmpty(generatorTags)) {
+//            for (String generatorTag : generatorTags) {
+//                queryWrapper.like("generatorTags", "\"" + generatorTag + "\"");
+//            }
+//        }
 
+        // ChatGPT 优化，将标签查询拼接由 AND 改为 OR
         if (CollUtil.isNotEmpty(generatorTags)) {
-            for (String generatorTag : generatorTags) {
-                queryWrapper.like("generatorTags", "\"" + generatorTag + "\"");
-            }
+            queryWrapper.and(wrapper -> {
+                for (String generatorTag : generatorTags) {
+                    System.out.println("----------------------" + generatorTag);
+                    wrapper.or().like("generatorTags", "%" + generatorTag + "%");
+                }
+            });
         }
 
         queryWrapper.eq(ObjectUtils.isNotEmpty(id), "id", id);
