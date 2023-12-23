@@ -73,7 +73,6 @@ public class GeneratorServiceImpl extends ServiceImpl<GeneratorMapper, Generator
         }
 
         // 有属性则校验
-        // 数据库中的 generatorName 字段长度为 255 ，按照一个字符占 3 个字节算，255 / 3 = 85 ，取 80 ，保守
         if (StringUtils.isNotBlank(generatorName) && generatorName.length() > 80) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "校验失败，代码生成器名称为空或长度过长");
         }
@@ -81,24 +80,19 @@ public class GeneratorServiceImpl extends ServiceImpl<GeneratorMapper, Generator
         if (StringUtils.isNotBlank(generatorDescription) && generatorDescription.length() > 300) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "校验失败，代码生成器描述为空或长度过长");
         }
-        // 数据库中的 generatorAuthor 字段长度为 255 ，按照一个字符占 3 个字节算，255 / 3 = 85 ，取 80 ，保守
         if (StringUtils.isNotBlank(generatorAuthor) && generatorAuthor.length() > 80) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "校验失败，代码生成器作者为空或长度过长");
         }
-        // 数据库中的 generatorVersion 字段长度为 255 ，按照一个字符占 3 个字节算，255 / 3 = 85 ，取 80 ，保守
         if (StringUtils.isNotBlank(generatorVersion) && generatorVersion.length() > 80) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "校验失败，代码生成器版本号为空或长度过长");
         }
-        // 数据库中的 generatorBasePackage 字段长度为 255 ，按照一个字符占 3 个字节算，255 / 3 = 85 ，取 80 ，保守
-        if (StringUtils.isNotBlank(generatorBasePackage) && generatorBasePackage.length() > 80) {
+        if (StringUtils.isNotBlank(generatorBasePackage) && generatorBasePackage.length() > 255) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "校验失败，代码生成器基础包名为空或长度过长");
         }
-        // 数据库中的 generatorPicture 字段长度为 255 ，按照一个字符占 3 个字节算，255 / 3 = 85 ，取 80 ，保守
-        if (StringUtils.isNotBlank(generatorPicture) && generatorPicture.length() > 80) {
+        if (StringUtils.isNotBlank(generatorPicture) && generatorPicture.length() > 255) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "校验失败，代码生成器图片路径为空或长度过长");
         }
-        // 数据库中的 generatorTags 字段长度为 1023 ，按照一个字符占 3 个字节算，1023 / 3 = 341 ，取 320 ，保守
-        if (StringUtils.isNotBlank(generatorTags) && generatorTags.length() > 320) {
+        if (StringUtils.isNotBlank(generatorTags) && generatorTags.length() > 1023) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "校验失败，代码生成器标签为空或长度过长");
         }
     }

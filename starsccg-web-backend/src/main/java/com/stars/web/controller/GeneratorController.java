@@ -1,7 +1,11 @@
 package com.stars.web.controller;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.qcloud.cos.model.COSObject;
+import com.qcloud.cos.model.COSObjectInputStream;
+import com.qcloud.cos.utils.IOUtils;
 import com.stars.web.annotation.AuthCheck;
 import com.stars.web.common.BaseResponse;
 import com.stars.web.common.DeleteRequest;
@@ -10,6 +14,7 @@ import com.stars.web.common.ResultUtils;
 import com.stars.web.constant.UserConstant;
 import com.stars.web.exception.BusinessException;
 import com.stars.web.exception.ThrowUtils;
+import com.stars.web.manager.CosManager;
 import com.stars.web.meta.Meta;
 import com.stars.web.model.dto.generator.GeneratorAddRequest;
 import com.stars.web.model.dto.generator.GeneratorEditRequest;
@@ -26,6 +31,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -44,6 +51,9 @@ public class GeneratorController {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private CosManager cosManager;
 
     /**
      * 添加代码生成器
@@ -340,5 +350,58 @@ public class GeneratorController {
         // 返回是否成功编辑代码生成器
         boolean result = this.generatorService.updateById(generator);
         return ResultUtils.success(result);
+    }
+
+    /**
+     * 根据 ID 下载代码生成器
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/download")
+    public void downloadGeneratorById(long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        if (id <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+
+        // 获取当前登录用户
+        User loginUser = this.userService.getLoginUser(request);
+
+        // 根据 ID 获取代码生成器
+        Generator generator = this.generatorService.getById(id);
+        if (generator == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+
+        // 获取产物包路径
+        String filepath = generator.getGeneratorDistPath();
+        if (StrUtil.isBlank(filepath)) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "产物包不存在");
+        }
+
+        // 追踪事件
+        log.info("用户 {} 下载了 {}", loginUser, filepath);
+
+        // COS 对象输入流
+        COSObjectInputStream cosObjectInput = null;
+        try {
+            COSObject cosObject = cosManager.getObject(filepath);
+            cosObjectInput = cosObject.getObjectContent();
+            // 处理下载到的流
+            byte[] bytes = IOUtils.toByteArray(cosObjectInput);
+            // 设置响应头
+            response.setContentType("application/octet-stream;charset=UTF-8");
+            response.setHeader("Content-Disposition", "attachment; filename=" + filepath);
+            // 写入响应
+            response.getOutputStream().write(bytes);
+            response.getOutputStream().flush();
+        } catch (Exception e) {
+            log.error("file download error, filepath = " + filepath, e);
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "下载失败");
+        } finally {
+            if (cosObjectInput != null) {
+                cosObjectInput.close();
+            }
+        }
     }
 }

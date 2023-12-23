@@ -3,6 +3,7 @@ package com.stars.maker.generator.main;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ClassPathResource;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ZipUtil;
 import com.stars.maker.generator.JarGenerator;
 import com.stars.maker.generator.ScriptGenerator;
 import com.stars.maker.generator.file.DynamicFileGenerator;
@@ -10,11 +11,12 @@ import com.stars.maker.meta.Meta;
 import com.stars.maker.meta.MetaManager;
 import freemarker.template.TemplateException;
 
-import java.io.File;
 import java.io.IOException;
 
 /**
  * 生成面板
+ * 主流程
+ * 主流程固化，分支流程扩展
  *
  * @author stars
  * @version 1.0.0
@@ -199,7 +201,7 @@ public abstract class GenerateTemplate {
      * @param jarPath
      * @param shellOutputFilePath
      */
-    protected void buildDist(String outputPath, String sourceCopyDestPath, String jarPath, String shellOutputFilePath) {
+    protected String buildDist(String outputPath, String sourceCopyDestPath, String jarPath, String shellOutputFilePath) {
         // 生成精简版的程序（产物包）
         String distOutputPath = outputPath + "-dist";
         // 拷贝 jar 包
@@ -212,5 +214,18 @@ public abstract class GenerateTemplate {
         FileUtil.copy(shellOutputFilePath + ".bat", distOutputPath, true);
         // 拷贝源模板文件
         FileUtil.copy(sourceCopyDestPath, distOutputPath, true);
+        return distOutputPath;
+    }
+
+    /**
+     * 制作压缩包
+     *
+     * @param outputPath
+     * @return 压缩包路径
+     */
+    protected String buildZip(String outputPath) {
+        String zipPath = outputPath + ".zip";
+        ZipUtil.zip(outputPath, zipPath);
+        return zipPath;
     }
 }

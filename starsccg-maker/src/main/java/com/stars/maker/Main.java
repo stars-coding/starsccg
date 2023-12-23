@@ -1,6 +1,8 @@
 package com.stars.maker;
 
+import com.stars.maker.generator.main.GenerateTemplate;
 import com.stars.maker.generator.main.MainGenerator;
+import com.stars.maker.generator.main.ZipGenerator;
 import freemarker.template.TemplateException;
 
 import java.io.IOException;
@@ -24,7 +26,9 @@ public class Main {
 //        args = new String[]{"list"};
 //        CommandExecutor commandExecutor = new CommandExecutor();
 //        commandExecutor.doExecute(args);
-        MainGenerator mainGenerator = new MainGenerator();
-        mainGenerator.doGenerate();
+//        MainGenerator mainGenerator = new MainGenerator();
+//        mainGenerator.doGenerate();
+        GenerateTemplate generateTemplate = new ZipGenerator();
+        generateTemplate.doGenerate();
     }
 }

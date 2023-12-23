@@ -6,6 +6,8 @@ import java.io.IOException;
 
 /**
  * 核心生成器
+ * 分支流程
+ * 主流程固化，分支流程扩展
  *
  * @author stars
  * @version 1.0.0
@@ -31,7 +33,8 @@ public class MainGenerator extends GenerateTemplate {
      * @param shellOutputFilePath
      */
     @Override
-    protected void buildDist(String outputPath, String sourceCopyDestPath, String jarPath, String shellOutputFilePath) {
+    protected String buildDist(String outputPath, String sourceCopyDestPath, String jarPath, String shellOutputFilePath) {
         System.out.println("没有生成精简包");
+        return "";
     }
 }
