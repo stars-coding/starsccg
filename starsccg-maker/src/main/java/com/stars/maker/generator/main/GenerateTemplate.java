@@ -11,6 +11,7 @@ import com.stars.maker.meta.Meta;
 import com.stars.maker.meta.MetaManager;
 import freemarker.template.TemplateException;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -117,6 +118,11 @@ public abstract class GenerateTemplate {
         // 生成 cli.command.GenerateCommand.java 文件
         inputFilePath = inputResourcePath + "templates/java/cli/command/GenerateCommand.java.ftl";
         outputFilePath = outputBaseJavaPackagePath + "/" + "cli/command/GenerateCommand.java";
+        DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
+
+        // 生成 cli.command.JsonGenerateCommand.java 文件
+        inputFilePath = inputResourcePath + "templates/java/cli/command/JsonGenerateCommand.java.ftl";
+        outputFilePath = outputBaseJavaPackagePath + "/" + "cli/command/JsonGenerateCommand.java";
         DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
 
         // 生成 cli.command.ListCommand.java 文件

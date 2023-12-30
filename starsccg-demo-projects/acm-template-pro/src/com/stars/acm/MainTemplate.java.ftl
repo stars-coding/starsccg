@@ -29,7 +29,7 @@ public class MainTemplate {
                 sum += num;
             }
             // 打印数组元素之和
-            System.out.println("${mainTemplateoutputText}" + sum);
+            System.out.println("${mainTemplate.outputText}" + sum);
 <#if loop>
         }
 </#if>

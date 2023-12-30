@@ -2,6 +2,7 @@ package ${basePackage}.cli;
 
 import ${basePackage}.cli.command.ConfigCommand;
 import ${basePackage}.cli.command.GenerateCommand;
+import ${basePackage}.cli.command.JsonGenerateCommand;
 import ${basePackage}.cli.command.ListCommand;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -19,8 +20,9 @@ public class CommandExecutor implements Runnable {
 
     {
         this.commandLine = new CommandLine(this)
-                .addSubcommand(new GenerateCommand())
                 .addSubcommand(new ConfigCommand())
+                .addSubcommand(new GenerateCommand())
+                .addSubcommand(new JsonGenerateCommand())
                 .addSubcommand(new ListCommand());
     }
 

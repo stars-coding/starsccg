@@ -1,6 +1,8 @@
 package com.stars.web.controller;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ZipUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.qcloud.cos.model.COSObject;
@@ -16,10 +18,7 @@ import com.stars.web.exception.BusinessException;
 import com.stars.web.exception.ThrowUtils;
 import com.stars.web.manager.CosManager;
 import com.stars.web.meta.Meta;
-import com.stars.web.model.dto.generator.GeneratorAddRequest;
-import com.stars.web.model.dto.generator.GeneratorEditRequest;
-import com.stars.web.model.dto.generator.GeneratorQueryRequest;
-import com.stars.web.model.dto.generator.GeneratorUpdateRequest;
+import com.stars.web.model.dto.generator.*;
 import com.stars.web.model.entity.Generator;
 import com.stars.web.model.entity.User;
 import com.stars.web.model.vo.GeneratorVo;
@@ -32,8 +31,14 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * 代码生成器控制器
@@ -403,5 +408,126 @@ public class GeneratorController {
                 cosObjectInput.close();
             }
         }
+    }
+
+    /**
+     * 使用代码生成器
+     *
+     * @param generatorUseRequest
+     * @param request
+     * @param response
+     * @return
+     */
+    @PostMapping("/use")
+    public void useGenerator(@RequestBody GeneratorUseRequest generatorUseRequest,
+                             HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // 获取用户输入的请求参数
+        Long id = generatorUseRequest.getId();
+        Map<String, Object> dataModel = generatorUseRequest.getDataModel();
+
+        // 获取当前登录用户
+        User loginUser = this.userService.getLoginUser(request);
+        this.log.info("userId = {} 使用了生成器 id = {}", loginUser.getId(), id);
+
+        // 根据 ID 获取代码生成器
+        Generator generator = this.generatorService.getById(id);
+        if (generator == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+
+        // 获取生成器的存储路径
+        String generatorDistPath = generator.getGeneratorDistPath();
+        if (StrUtil.isBlank(generatorDistPath)) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "代码生成器的产物包不存在");
+        }
+
+        // 从 COS 下载代码生成器的压缩包
+
+        // 定义独立的工作空间
+        String projectPath = System.getProperty("user.dir");
+        projectPath = projectPath.replaceAll("\\\\", "/");
+        String generatorTempDirPath = String.format("%s/.temp/use/%s", projectPath, id);
+        String zipFilePath = generatorTempDirPath + "/dist.zip";
+
+        // 压缩文件路径不存在则新建
+        if (!FileUtil.exist(zipFilePath)) {
+            FileUtil.touch(zipFilePath);
+        }
+
+        // 从 COS 上下载代码生成器
+        try {
+            this.cosManager.download(generatorDistPath, zipFilePath);
+        } catch (Exception e) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "代码生成器下载失败");
+        }
+
+        // 解压压缩包，得到脚本文件
+        File unzipDistDir = ZipUtil.unzip(zipFilePath);
+
+        // 将用户输入的参数写到 JSON 文件中
+        String dataModelFilePath = generatorTempDirPath + "/dataModel.json";
+        String jsonStr = JSONUtil.toJsonStr(dataModel);
+        FileUtil.writeUtf8String(jsonStr, dataModelFilePath);
+
+        // 执行脚本
+        // 找到脚本文件所在路径
+        // 要注意，如果不是 Windows 系统，找 generator 文件而不是 bat
+        File scriptFile = FileUtil.loopFiles(unzipDistDir, 2, null)
+                .stream()
+                .filter(file -> file.isFile()
+                        && "generator.bat".equals(file.getName()))
+                .findFirst()
+                .orElseThrow(RuntimeException::new);
+
+        // 添加可执行权限
+        try {
+            Set<PosixFilePermission> permissions = PosixFilePermissions.fromString("rwxrwxrwx");
+            Files.setPosixFilePermissions(scriptFile.toPath(), permissions);
+        } catch (Exception e) {
+        }
+
+        // 构造命令
+        File scriptDir = scriptFile.getParentFile();
+        // 注意，如果是 Mac / Linux 系统，要用 "./generator"
+        String scriptAbsolutePath = scriptFile.getAbsolutePath().replace("\\", "/");
+        String[] commands = new String[]{scriptAbsolutePath, "json-generate", "--file=" + dataModelFilePath};
+
+        // 拆分，重点
+        ProcessBuilder processBuilder = new ProcessBuilder(commands);
+        processBuilder.directory(scriptDir);
+
+        try {
+            Process process = processBuilder.start();
+
+            // 读取命令的输出
+            InputStream inputStream = process.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+
+            // 等待命令执行完成
+            int exitCode = process.waitFor();
+            System.out.println("命令执行结束，退出码：" + exitCode);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "执行代码生成器脚本错误");
+        }
+
+        // 压缩得到的生成结果，返回给前端
+        String generatedPath = scriptDir.getAbsolutePath() + "/generated";
+        String resultPath = generatorTempDirPath + "/result.zip";
+        File resultFile = ZipUtil.zip(generatedPath, resultPath);
+
+        // 设置响应头
+        response.setContentType("application/octet-stream;charset=UTF-8");
+        response.setHeader("Content-Disposition", "attachment; filename=" + resultFile.getName());
+        Files.copy(resultFile.toPath(), response.getOutputStream());
+
+        // 清理文件，异步
+        CompletableFuture.runAsync(() -> {
+            FileUtil.del(generatorTempDirPath);
+        });
     }
 }
