@@ -8,7 +8,6 @@ import com.stars.maker.meta.enums.FileGenerateTypeEnum;
 import com.stars.maker.meta.enums.FileTypeEnum;
 import com.stars.maker.meta.enums.ModelTypeEnum;
 
-import java.io.File;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,7 +18,7 @@ import java.util.stream.Collectors;
  * @author stars
  * @version 1.0.0
  */
-public class MataValidator {
+public class MetaValidator {
 
     /**
      * 校验全部
@@ -28,9 +27,9 @@ public class MataValidator {
      */
     public static void doValidAndFill(Meta meta) {
         // 校验三部分
-        MataValidator.validAndFillMetaRoot(meta);
-        MataValidator.validAndFillFileConfig(meta);
-        MataValidator.validAndFillModelConfig(meta);
+        MetaValidator.validAndFillMetaRoot(meta);
+        MetaValidator.validAndFillFileConfig(meta);
+        MetaValidator.validAndFillModelConfig(meta);
     }
 
     /**

@@ -1,7 +1,6 @@
 package com.stars.maker.generator.main;
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.resource.ClassPathResource;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.ZipUtil;
 import com.stars.maker.generator.JarGenerator;
@@ -11,7 +10,6 @@ import com.stars.maker.meta.Meta;
 import com.stars.maker.meta.MetaManager;
 import freemarker.template.TemplateException;
 
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -38,6 +36,20 @@ public abstract class GenerateTemplate {
         String projectPath = System.getProperty("user.dir");
         // 输出的根路径，指在哪里生成这个代码生成器项目文件
         String outputPath = projectPath + "/" + "generated" + "/" + meta.getName();
+        // 调用重载方法
+        this.doGenerate(meta, projectPath);
+    }
+
+    /**
+     * 生成
+     *
+     * @param meta
+     * @param outputPath
+     * @throws IOException
+     * @throws TemplateException
+     * @throws InterruptedException
+     */
+    public void doGenerate(Meta meta, String outputPath) throws IOException, TemplateException, InterruptedException {
         // 目录为空则创建目录
         if (!FileUtil.exist(outputPath)) {
             FileUtil.mkdir(outputPath);
@@ -88,9 +100,7 @@ public abstract class GenerateTemplate {
         outputPath = outputPath.replaceAll("\\\\", "/");
 
         // 读取 resources 目录
-        ClassPathResource classPathResource = new ClassPathResource("");
-        // 获取 resources 目录的绝对路径
-        String inputResourcePath = classPathResource.getAbsolutePath();
+        String inputResourcePath = "";
 
         // Java 包的基础路径
         // com.stars

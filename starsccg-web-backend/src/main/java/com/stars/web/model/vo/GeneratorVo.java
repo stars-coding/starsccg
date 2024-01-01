@@ -1,7 +1,7 @@
 package com.stars.web.model.vo;
 
 import cn.hutool.json.JSONUtil;
-import com.stars.web.meta.Meta;
+import com.stars.maker.meta.Meta;
 import com.stars.web.model.entity.Generator;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
