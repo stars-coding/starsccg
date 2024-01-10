@@ -102,7 +102,7 @@ public class FileController {
             response.getOutputStream().flush();
         } catch (Exception e) {
             this.log.error("file download error, filepath = " + filepath, e);
-            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "下载失败");
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "代码生成器下载失败");
         } finally {
             if (cosObjectInput != null) {
                 cosObjectInput.close();

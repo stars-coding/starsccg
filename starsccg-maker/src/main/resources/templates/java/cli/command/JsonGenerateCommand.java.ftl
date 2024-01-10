@@ -11,7 +11,7 @@ import picocli.CommandLine.Option;
 import java.util.concurrent.Callable;
 
 /**
- * 读取 json 文件生成代码
+ * 读取 JSON 文件生成命令
  *
 <#if author??> * @author ${author}</#if>
 <#if version??> * @version ${version}</#if>

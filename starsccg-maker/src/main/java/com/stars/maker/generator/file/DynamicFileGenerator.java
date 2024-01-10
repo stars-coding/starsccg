@@ -22,16 +22,17 @@ import java.util.Locale;
 public class DynamicFileGenerator {
 
     /**
-     * 使用相对路径生成文件
+     * 生成动态文件
+     * 使用相对路径生动态成文件
      *
-     * @param relativeInputPath 模板文件相对输入路径
+     * @param relativeInputPath 模板文件输入路径
      * @param outputPath        输出路径
      * @param model             数据模型
      * @throws IOException
      * @throws TemplateException
      */
-    public static void doGenerate(String relativeInputPath, String outputPath, Object model) throws IOException, TemplateException {
-        // new 出 Configuration 对象，参数为 FreeMarker 版本号
+    public static void doGenerate(String relativeInputPath, String outputPath, Meta model) throws IOException, TemplateException {
+        // 创建 Configuration 对象，参数为 FreeMarker 版本号
         Configuration configuration = new Configuration(Configuration.VERSION_2_3_32);
 
         // 获取模板文件所属包和模板名称
@@ -45,28 +46,31 @@ public class DynamicFileGenerator {
 
         // 设置模板文件使用的字符集
         configuration.setDefaultEncoding("utf-8");
+        configuration.setEncoding(Locale.getDefault(), "UTF-8");
 
         // 创建模板对象，加载指定模板
-        Template template = configuration.getTemplate(templateName);
+        Template template = configuration.getTemplate(templateName, "UTF-8");
 
-        // 文件不存在则创建文件和父目录
+        // 如果文件不存在，则新建文件
         if (!FileUtil.exist(outputPath)) {
             FileUtil.touch(outputPath);
         }
 
-        // 生成
-        Writer out = new FileWriter(outputPath);
+        // 生成文件，指定最终的文件名称
+        BufferedWriter out =
+                new BufferedWriter(new OutputStreamWriter(Files.newOutputStream(Paths.get(outputPath)), StandardCharsets.UTF_8));
         template.process(model, out);
 
-        // 生成文件后别忘了关闭哦
+        // 关闭输出流资源
         out.close();
     }
 
     /**
      * 生成动态文件
+     * 使用绝对路径生成动态文件
      *
      * @param inputPath  模板文件输入路径
-     * @param outputPath 代码生成输出路径
+     * @param outputPath 输出路径
      * @param model      数据模型
      * @throws IOException
      * @throws TemplateException
