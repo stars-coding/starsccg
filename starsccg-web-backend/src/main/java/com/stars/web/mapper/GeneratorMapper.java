@@ -2,8 +2,8 @@ package com.stars.web.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.stars.web.model.entity.Generator;
+import org.apache.ibatis.annotations.Select;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -14,11 +14,6 @@ import java.util.List;
  */
 public interface GeneratorMapper extends BaseMapper<Generator> {
 
-    /**
-     * 查询代码生成器列表（包括已被删除的数据）
-     *
-     * @param minUpdateTime
-     * @return
-     */
-    List<Generator> listGeneratorWithDelete(Date minUpdateTime);
+    @Select("SELECT id, generatorDistPath FROM generator WHERE isDelete = 1")
+    List<Generator> listDeletedGenerator();
 }
