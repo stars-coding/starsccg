@@ -7,7 +7,10 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -45,7 +48,7 @@ public class DynamicFileGenerator {
         configuration.setTemplateLoader(templateLoader);
 
         // 设置模板文件使用的字符集
-        configuration.setDefaultEncoding("utf-8");
+        configuration.setDefaultEncoding("UTF-8");
         configuration.setEncoding(Locale.getDefault(), "UTF-8");
 
         // 创建模板对象，加载指定模板
@@ -75,7 +78,7 @@ public class DynamicFileGenerator {
      * @throws IOException
      * @throws TemplateException
      */
-    public static void doGenerateById(String inputPath, String outputPath, Meta model) throws IOException, TemplateException {
+    public static void doGenerateByPath(String inputPath, String outputPath, Meta model) throws IOException, TemplateException {
         // 创建 Configuration 对象，参数为 FreeMarker 版本号
         Configuration configuration = new Configuration(Configuration.VERSION_2_3_32);
 

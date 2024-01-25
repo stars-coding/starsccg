@@ -1,6 +1,8 @@
 package com.stars.maker.generator;
 
 import cn.hutool.core.io.FileUtil;
+import com.stars.maker.util.os.OsUtil;
+import com.stars.maker.util.os.enums.OsTypeEnum;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -26,31 +28,36 @@ public class ScriptGenerator {
      * @throws IOException
      */
     public static void doGenerate(String outputPath, String jarPath) throws IOException {
+        // 获取当前操作系统类型
+        String osType = OsUtil.OS_TYPE;
 
-        StringBuilder stringBuilder;
+        // 声明字符流
+        StringBuilder stringBuilder = new StringBuilder();
 
-        // Linux
-        stringBuilder = new StringBuilder();
-        // 拼接字符串
-        stringBuilder.append("#!/bin/bash").append("\n");
-        stringBuilder.append(String.format("java -jar %s \"$@\"", jarPath)).append("\n");
-        // 将字符串写入文件
-        FileUtil.writeBytes(stringBuilder.toString().getBytes(StandardCharsets.UTF_8), outputPath);
-
-        // Linux 添加可执行权限
-        try {
+        if (OsTypeEnum.WINDOWS.getValue().equals(osType)) {
+            // 拼接字符串
+            stringBuilder.append("@echo off").append("\n");
+            stringBuilder.append(String.format("java -jar %s %%*", jarPath)).append("\n");
+            // 将字符串写入文件
+            FileUtil.writeBytes(stringBuilder.toString().getBytes(StandardCharsets.UTF_8), outputPath + ".bat");
+        } else if (OsTypeEnum.LINUX.getValue().equals(osType)) {
+            // 拼接字符串
+            stringBuilder.append("#!/bin/bash").append("\n");
+            stringBuilder.append(String.format("java -jar %s \"$@\"", jarPath)).append("\n");
+            // 将字符串写入文件
+            FileUtil.writeBytes(stringBuilder.toString().getBytes(StandardCharsets.UTF_8), outputPath);
+            // Linux 添加可执行权限
             Set<PosixFilePermission> permissions = PosixFilePermissions.fromString("rwxrwxrwx");
             Files.setPosixFilePermissions(Paths.get(outputPath), permissions);
-        } catch (Exception e) {
-            // 防止 windows 下执行报错
+        } else {
+            // 拼接字符串
+            stringBuilder.append("#!/bin/bash").append("\n");
+            stringBuilder.append(String.format("java -jar %s \"$@\"", jarPath)).append("\n");
+            // 将字符串写入文件
+            FileUtil.writeBytes(stringBuilder.toString().getBytes(StandardCharsets.UTF_8), outputPath);
+            // Linux 添加可执行权限
+            Set<PosixFilePermission> permissions = PosixFilePermissions.fromString("rwxrwxrwx");
+            Files.setPosixFilePermissions(Paths.get(outputPath), permissions);
         }
-
-        // windows
-        stringBuilder = new StringBuilder();
-        // 拼接字符串
-        stringBuilder.append("@echo off").append("\n");
-        stringBuilder.append(String.format("java -jar %s %%*", jarPath)).append("\n");
-        // 将字符串写入文件
-        FileUtil.writeBytes(stringBuilder.toString().getBytes(StandardCharsets.UTF_8), outputPath + ".bat");
     }
 }

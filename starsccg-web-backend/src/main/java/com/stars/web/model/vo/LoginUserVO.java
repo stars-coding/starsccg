@@ -12,7 +12,7 @@ import java.util.Date;
  * @version 1.0.0
  **/
 @Data
-public class LoginUserVo implements Serializable {
+public class LoginUserVO implements Serializable {
 
     /**
      * 用户主键

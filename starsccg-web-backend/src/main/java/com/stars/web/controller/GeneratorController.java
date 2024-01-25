@@ -14,7 +14,10 @@ import com.qcloud.cos.model.COSObjectInputStream;
 import com.qcloud.cos.utils.IOUtils;
 import com.stars.maker.generator.main.GenerateTemplate;
 import com.stars.maker.generator.main.ZipGenerator;
+import com.stars.maker.meta.Meta;
 import com.stars.maker.meta.MetaValidator;
+import com.stars.maker.util.os.OsUtil;
+import com.stars.maker.util.os.enums.OsTypeEnum;
 import com.stars.web.annotation.AuthCheck;
 import com.stars.web.common.BaseResponse;
 import com.stars.web.common.DeleteRequest;
@@ -25,11 +28,10 @@ import com.stars.web.exception.BusinessException;
 import com.stars.web.exception.ThrowUtils;
 import com.stars.web.manager.CacheManager;
 import com.stars.web.manager.CosManager;
-import com.stars.maker.meta.Meta;
 import com.stars.web.model.dto.generator.*;
 import com.stars.web.model.entity.Generator;
 import com.stars.web.model.entity.User;
-import com.stars.web.model.vo.GeneratorVo;
+import com.stars.web.model.vo.GeneratorVO;
 import com.stars.web.service.GeneratorService;
 import com.stars.web.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +44,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
@@ -91,25 +94,21 @@ public class GeneratorController {
         Generator generator = new Generator();
         BeanUtils.copyProperties(generatorAddRequest, generator);
 
-        List<String> generatorTagsList = generatorAddRequest.getGeneratorTags();
-        String generatorTags = JSONUtil.toJsonStr(generatorTagsList);
-        generator.setGeneratorTags(generatorTags);
+        List<String> tags = generatorAddRequest.getTags();
+        generator.setTags(JSONUtil.toJsonStr(tags));
 
-        Meta.FileConfig fileConfig = generatorAddRequest.getGeneratorFileConfig();
-        String generatorFileConfig = JSONUtil.toJsonStr(fileConfig);
-        generator.setGeneratorFileConfig(generatorFileConfig);
+        Meta.FileConfig fileConfig = generatorAddRequest.getFileConfig();
+        generator.setFileConfig(JSONUtil.toJsonStr(fileConfig));
 
-        Meta.ModelConfig modelConfig = generatorAddRequest.getGeneratorModelConfig();
-        String generatorModelConfig = JSONUtil.toJsonStr(modelConfig);
-        generator.setGeneratorModelConfig(generatorModelConfig);
+        Meta.ModelConfig modelConfig = generatorAddRequest.getModelConfig();
+        generator.setModelConfig(JSONUtil.toJsonStr(modelConfig));
 
         // 校验代码生成器属性
-        this.generatorService.validGenerator(generator, true, request);
+        this.generatorService.validGenerator(generator, true);
 
         // 设置代码生成器的添加人
         User loginUser = this.userService.getLoginUser(request);
-        Long loginUserId = loginUser.getId();
-        generator.setGeneratorUserId(loginUserId);
+        generator.setUserId(loginUser.getId());
 
         // 校验代码生成器是否成功保存
         boolean result = this.generatorService.save(generator);
@@ -134,20 +133,20 @@ public class GeneratorController {
         }
 
         // 根据 ID 判断待删除的代码生成器是否存在
-        Long deleteGeneratorId = deleteRequest.getId();
-        Generator deleteGenerator = this.generatorService.getById(deleteGeneratorId);
-        ThrowUtils.throwIf(deleteGenerator == null, ErrorCode.NOT_FOUND_ERROR);
+        Long id = deleteRequest.getId();
+        Generator oldGenerator = this.generatorService.getById(id);
+        ThrowUtils.throwIf(oldGenerator == null, ErrorCode.NOT_FOUND_ERROR);
 
         // 权限校验，仅本人或管理员可删除
-        User loginUser = this.userService.getLoginUser(request);
-        Long loginUserId = loginUser.getId();
-        Long deleteGeneratorUserId = deleteGenerator.getGeneratorUserId();
-        if (!deleteGeneratorUserId.equals(loginUserId) && !this.userService.isAdmin(request)) {
+        User user = this.userService.getLoginUser(request);
+        Long userId = user.getId();
+        Long oldGeneratorUserId = oldGenerator.getUserId();
+        if (!oldGeneratorUserId.equals(userId) && !this.userService.isAdmin(request)) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
 
         // 返回待删除的代码生成器是否删除成功
-        boolean flag = this.generatorService.removeById(deleteGeneratorId);
+        boolean flag = this.generatorService.removeById(id);
         return ResultUtils.success(flag);
     }
 
@@ -175,24 +174,21 @@ public class GeneratorController {
         Generator generator = new Generator();
         BeanUtils.copyProperties(generatorUpdateRequest, generator);
 
-        List<String> generatorTagsList = generatorUpdateRequest.getGeneratorTags();
-        String generatorTags = JSONUtil.toJsonStr(generatorTagsList);
-        generator.setGeneratorTags(generatorTags);
+        List<String> tags = generatorUpdateRequest.getTags();
+        generator.setTags(JSONUtil.toJsonStr(tags));
 
-        Meta.FileConfig fileConfig = generatorUpdateRequest.getGeneratorFileConfig();
-        String generatorFileConfig = JSONUtil.toJsonStr(fileConfig);
-        generator.setGeneratorFileConfig(generatorFileConfig);
+        Meta.FileConfig fileConfig = generatorUpdateRequest.getFileConfig();
+        generator.setFileConfig(JSONUtil.toJsonStr(fileConfig));
 
-        Meta.ModelConfig modelConfig = generatorUpdateRequest.getGeneratorModelConfig();
-        String generatorModelConfig = JSONUtil.toJsonStr(modelConfig);
-        generator.setGeneratorModelConfig(generatorModelConfig);
+        Meta.ModelConfig modelConfig = generatorUpdateRequest.getModelConfig();
+        generator.setModelConfig(JSONUtil.toJsonStr(modelConfig));
 
         // 校验代码生成器属性
-        this.generatorService.validGenerator(generator, false, request);
+        this.generatorService.validGenerator(generator, false);
 
         // 根据 ID 判断代码生成器是否存在
-        Long updateGeneratorId = generatorUpdateRequest.getId();
-        Generator oldGenerator = this.generatorService.getById(updateGeneratorId);
+        Long id = generatorUpdateRequest.getId();
+        Generator oldGenerator = this.generatorService.getById(id);
         ThrowUtils.throwIf(oldGenerator == null, ErrorCode.NOT_FOUND_ERROR);
 
         // 返回是否成功更新代码生成器
@@ -208,7 +204,7 @@ public class GeneratorController {
      * @return
      */
     @GetMapping("/get/vo")
-    public BaseResponse<GeneratorVo> getGeneratorVoById(Long id, HttpServletRequest request) {
+    public BaseResponse<GeneratorVO> getGeneratorVOById(Long id, HttpServletRequest request) {
         if (id <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -220,8 +216,8 @@ public class GeneratorController {
         }
 
         // 获取代码生成器视图
-        GeneratorVo generatorVo = this.generatorService.getGeneratorVo(generator, request);
-        return ResultUtils.success(generatorVo);
+        GeneratorVO generatorVO = this.generatorService.getGeneratorVO(generator, request);
+        return ResultUtils.success(generatorVO);
     }
 
     /**
@@ -250,7 +246,7 @@ public class GeneratorController {
 
         // 获取代码生成器分页
         Page<Generator> generatorPage = this.generatorService
-                .page(new Page<>(current, size), this.generatorService.getQueryWrapper(generatorQueryRequest, request));
+                .page(new Page<>(current, size), this.generatorService.getQueryWrapper(generatorQueryRequest));
         return ResultUtils.success(generatorPage);
     }
 
@@ -262,7 +258,7 @@ public class GeneratorController {
      * @return
      */
     @PostMapping("/list/page/vo")
-    public BaseResponse<Page<GeneratorVo>> listGeneratorVoByPage(@RequestBody GeneratorQueryRequest generatorQueryRequest,
+    public BaseResponse<Page<GeneratorVO>> listGeneratorVOByPage(@RequestBody GeneratorQueryRequest generatorQueryRequest,
                                                                  HttpServletRequest request) {
         if (generatorQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -279,17 +275,17 @@ public class GeneratorController {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         Page<Generator> generatorPage = this.generatorService
-                .page(new Page<>(current, size), this.generatorService.getQueryWrapper(generatorQueryRequest, request));
+                .page(new Page<>(current, size), this.generatorService.getQueryWrapper(generatorQueryRequest));
         stopWatch.stop();
         System.out.println("查询代码生成器：" + stopWatch.getTotalTimeMillis());
 
         // 获取代码生成器视图分页
         stopWatch = new StopWatch();
         stopWatch.start();
-        Page<GeneratorVo> generatorVoPage = this.generatorService.getGeneratorVoPage(generatorPage, request);
+        Page<GeneratorVO> generatorVOPage = this.generatorService.getGeneratorVOPage(generatorPage, request);
         stopWatch.stop();
         System.out.println("查询关联数据：" + stopWatch.getTotalTimeMillis());
-        return ResultUtils.success(generatorVoPage);
+        return ResultUtils.success(generatorVOPage);
     }
 
     /**
@@ -300,7 +296,7 @@ public class GeneratorController {
      * @return
      */
     @PostMapping("/list/page/vo/fast")
-    public BaseResponse<Page<GeneratorVo>> listGeneratorVoByPageFast(@RequestBody GeneratorQueryRequest generatorQueryRequest,
+    public BaseResponse<Page<GeneratorVO>> listGeneratorVOByPageFast(@RequestBody GeneratorQueryRequest generatorQueryRequest,
                                                                      HttpServletRequest request) {
         if (generatorQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -314,29 +310,29 @@ public class GeneratorController {
         String cacheKey = this.getPageCacheKey(generatorQueryRequest);
         Object cacheValue = this.cacheManager.get(cacheKey);
         if (cacheValue != null) {
-            return ResultUtils.success((Page<GeneratorVo>) cacheValue);
+            return ResultUtils.success((Page<GeneratorVO>) cacheValue);
         }
 
         // 限制爬虫
         ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
-        QueryWrapper<Generator> queryWrapper = this.generatorService.getQueryWrapper(generatorQueryRequest, request);
+        QueryWrapper<Generator> queryWrapper = this.generatorService.getQueryWrapper(generatorQueryRequest);
         queryWrapper.select("id",
-                "generatorName",
-                "generatorDescription",
-                "generatorTags",
-                "generatorPicture",
-                "generatorStatus",
-                "generatorUserId",
+                "name",
+                "description",
+                "tags",
+                "picture",
+                "status",
+                "userId",
                 "createTime",
                 "updateTime"
         );
         Page<Generator> generatorPage = this.generatorService.page(new Page<>(current, size), queryWrapper);
-        Page<GeneratorVo> generatorVoPage = this.generatorService.getGeneratorVoPage(generatorPage, request);
+        Page<GeneratorVO> generatorVOPage = this.generatorService.getGeneratorVOPage(generatorPage, request);
 
         // 写入缓存
-        this.cacheManager.put(cacheKey, generatorVoPage);
+        this.cacheManager.put(cacheKey, generatorVOPage);
 
-        return ResultUtils.success(generatorVoPage);
+        return ResultUtils.success(generatorVOPage);
     }
 
     /**
@@ -347,7 +343,7 @@ public class GeneratorController {
      * @return
      */
     @PostMapping("/my/list/page/vo")
-    public BaseResponse<Page<GeneratorVo>> listMyGeneratorVoByPage(@RequestBody GeneratorQueryRequest generatorQueryRequest,
+    public BaseResponse<Page<GeneratorVO>> listMyGeneratorVOByPage(@RequestBody GeneratorQueryRequest generatorQueryRequest,
                                                                    HttpServletRequest request) {
         if (generatorQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -356,7 +352,7 @@ public class GeneratorController {
         // 为代码生成器查询请求设置当前登录用户 ID
         User loginUser = this.userService.getLoginUser(request);
         Long loginUserId = loginUser.getId();
-        generatorQueryRequest.setGeneratorUserId(loginUserId);
+        generatorQueryRequest.setUserId(loginUserId);
 
         // 获取分页信息
         long current = generatorQueryRequest.getCurrent();
@@ -367,11 +363,11 @@ public class GeneratorController {
 
         // 获取代码生成器分页
         Page<Generator> generatorPage = this.generatorService
-                .page(new Page<>(current, size), this.generatorService.getQueryWrapper(generatorQueryRequest, request));
+                .page(new Page<>(current, size), this.generatorService.getQueryWrapper(generatorQueryRequest));
 
         // 获取代码生成器视图分页
-        Page<GeneratorVo> generatorVoPage = this.generatorService.getGeneratorVoPage(generatorPage, request);
-        return ResultUtils.success(generatorVoPage);
+        Page<GeneratorVO> generatorVOPage = this.generatorService.getGeneratorVOPage(generatorPage, request);
+        return ResultUtils.success(generatorVOPage);
     }
 
     /**
@@ -392,36 +388,40 @@ public class GeneratorController {
         Generator generator = new Generator();
         BeanUtils.copyProperties(generatorEditRequest, generator);
 
-        List<String> generatorTagsList = generatorEditRequest.getGeneratorTags();
-        String generatorTags = JSONUtil.toJsonStr(generatorTagsList);
-        generator.setGeneratorTags(generatorTags);
+        List<String> tags = generatorEditRequest.getTags();
+        generator.setTags(JSONUtil.toJsonStr(tags));
 
-        Meta.FileConfig fileConfig = generatorEditRequest.getGeneratorFileConfig();
-        String generatorFileConfig = JSONUtil.toJsonStr(fileConfig);
-        generator.setGeneratorFileConfig(generatorFileConfig);
+        Meta.FileConfig fileConfig = generatorEditRequest.getFileConfig();
+        generator.setFileConfig(JSONUtil.toJsonStr(fileConfig));
 
-        Meta.ModelConfig modelConfig = generatorEditRequest.getGeneratorModelConfig();
-        String generatorModelConfig = JSONUtil.toJsonStr(modelConfig);
-        generator.setGeneratorModelConfig(generatorModelConfig);
+        Meta.ModelConfig modelConfig = generatorEditRequest.getModelConfig();
+        generator.setModelConfig(JSONUtil.toJsonStr(modelConfig));
 
         // 参数校验
-        this.generatorService.validGenerator(generator, false, request);
+        this.generatorService.validGenerator(generator, false);
 
         // 根据 ID 判断待编辑的代码生成器是否存在
-        Long editGeneratorId = generatorEditRequest.getId();
-        Generator editGenerator = this.generatorService.getById(editGeneratorId);
-        ThrowUtils.throwIf(editGenerator == null, ErrorCode.NOT_FOUND_ERROR);
+        Long id = generatorEditRequest.getId();
+        Generator oldGenerator = this.generatorService.getById(id);
+        ThrowUtils.throwIf(oldGenerator == null, ErrorCode.NOT_FOUND_ERROR);
 
         // 权限校验，仅本人或管理员可编辑
         User loginUser = this.userService.getLoginUser(request);
         Long loginUserId = loginUser.getId();
-        Long editGeneratorUserId = editGenerator.getGeneratorUserId();
+        Long editGeneratorUserId = oldGenerator.getUserId();
         if (!editGeneratorUserId.equals(loginUserId) && !this.userService.isAdmin(request)) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
 
         // 返回是否成功编辑代码生成器
         boolean result = this.generatorService.updateById(generator);
+
+        // 清理缓存
+        if (result) {
+            String cacheFileDir = this.getCacheFileDir(id);
+            FileUtil.del(cacheFileDir);
+        }
+
         return ResultUtils.success(result);
     }
 
@@ -448,7 +448,7 @@ public class GeneratorController {
         }
 
         // 获取产物包路径
-        String filepath = generator.getGeneratorDistPath();
+        String filepath = generator.getDistPath();
         if (StrUtil.isBlank(filepath)) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "代码生成器的产物包不存在");
         }
@@ -518,8 +518,8 @@ public class GeneratorController {
         }
 
         // 获取生成器的存储路径
-        String generatorDistPath = generator.getGeneratorDistPath();
-        if (StrUtil.isBlank(generatorDistPath)) {
+        String distPath = generator.getDistPath();
+        if (StrUtil.isBlank(distPath)) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "代码生成器的产物包不存在");
         }
 
@@ -536,19 +536,39 @@ public class GeneratorController {
             FileUtil.touch(zipFilePath);
         }
 
-        // 从 COS 上下载代码生成器
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
-        try {
-            this.cosManager.download(generatorDistPath, zipFilePath);
-        } catch (Exception e) {
-            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "代码生成器下载失败");
+        // 使用文件缓存
+        String cacheFilePath = getCacheFilePath(id, distPath);
+        Path cacheFilePathObj = Paths.get(cacheFilePath);
+        Path zipFilePathObj = Paths.get(zipFilePath);
+
+        if (!FileUtil.exist(zipFilePath)) {
+            // 有缓存，复制文件
+            if (FileUtil.exist(cacheFilePath)) {
+                Files.copy(cacheFilePathObj, zipFilePathObj);
+            } else {
+                // 没有缓存，从对象存储下载文件
+                FileUtil.touch(zipFilePath);
+                // 从 COS 上下载代码生成器
+                StopWatch stopWatch = new StopWatch();
+                stopWatch.start();
+                try {
+                    this.cosManager.download(distPath, zipFilePath);
+                } catch (Exception e) {
+                    throw new BusinessException(ErrorCode.SYSTEM_ERROR, "代码生成器下载失败");
+                }
+                stopWatch.stop();
+                System.out.println("下载耗时：" + stopWatch.getTotalTimeMillis());
+                // 写文件缓存
+                File parentFile = cacheFilePathObj.toFile().getParentFile();
+                if (!FileUtil.exist(parentFile)) {
+                    FileUtil.mkdir(parentFile);
+                }
+                Files.copy(zipFilePathObj, cacheFilePathObj);
+            }
         }
-        stopWatch.stop();
-        System.out.println("下载耗时：" + stopWatch.getTotalTimeMillis());
 
         // 解压压缩包，得到脚本文件
-        stopWatch = new StopWatch();
+        StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         File unzipDistDir = ZipUtil.unzip(zipFilePath);
         stopWatch.stop();
@@ -564,20 +584,37 @@ public class GeneratorController {
         System.out.println("写数据文件：" + stopWatch.getTotalTimeMillis());
 
         // 执行脚本
+        // 获取当前操作系统类型
+        String osType = OsUtil.OS_TYPE;
         // 找到脚本文件所在路径
-        // 要注意，如果不是 Windows 系统，找 generator 文件而不是 bat
-        File scriptFile = FileUtil.loopFiles(unzipDistDir, 2, null)
-                .stream()
-                .filter(file -> file.isFile()
-                        && "generator.bat".equals(file.getName()))
-                .findFirst()
-                .orElseThrow(RuntimeException::new);
-
-        // 添加可执行权限
-        try {
+        File scriptFile = null;
+        if (OsTypeEnum.WINDOWS.getValue().equals(osType)) {
+            scriptFile = FileUtil.loopFiles(unzipDistDir, 2, null)
+                    .stream()
+                    .filter(file -> file.isFile()
+                            && "generator.bat".equals(file.getName()))
+                    .findFirst()
+                    .orElseThrow(RuntimeException::new);
+        } else if (OsTypeEnum.LINUX.getValue().equals(osType)) {
+            scriptFile = FileUtil.loopFiles(unzipDistDir, 2, null)
+                    .stream()
+                    .filter(file -> file.isFile()
+                            && "generator".equals(file.getName()))
+                    .findFirst()
+                    .orElseThrow(RuntimeException::new);
+            // 添加可执行权限
             Set<PosixFilePermission> permissions = PosixFilePermissions.fromString("rwxrwxrwx");
             Files.setPosixFilePermissions(scriptFile.toPath(), permissions);
-        } catch (Exception e) {
+        } else {
+            scriptFile = FileUtil.loopFiles(unzipDistDir, 2, null)
+                    .stream()
+                    .filter(file -> file.isFile()
+                            && "generator".equals(file.getName()))
+                    .findFirst()
+                    .orElseThrow(RuntimeException::new);
+            // 添加可执行权限
+            Set<PosixFilePermission> permissions = PosixFilePermissions.fromString("rwxrwxrwx");
+            Files.setPosixFilePermissions(scriptFile.toPath(), permissions);
         }
 
         // 构造命令
@@ -736,7 +773,7 @@ public class GeneratorController {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
         }
 
-        String distPath = generator.getGeneratorDistPath();
+        String distPath = generator.getDistPath();
         if (StrUtil.isBlank(distPath)) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "代码生成器的产物包不存在");
         }
@@ -776,5 +813,17 @@ public class GeneratorController {
         String base64 = Base64Encoder.encode(jsonStr);
         String key = "generator:page:" + base64;
         return key;
+    }
+
+    /**
+     * 获取缓存文件所在的目录
+     *
+     * @param id 生成器 id
+     * @return
+     */
+    public String getCacheFileDir(long id) {
+        String projectPath = System.getProperty("user.dir");
+        String tempDirPath = String.format("%s/.temp/cache/%s", projectPath, id);
+        return tempDirPath;
     }
 }

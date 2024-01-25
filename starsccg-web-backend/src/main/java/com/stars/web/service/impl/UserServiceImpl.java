@@ -11,8 +11,8 @@ import com.stars.web.mapper.UserMapper;
 import com.stars.web.model.dto.user.UserQueryRequest;
 import com.stars.web.model.entity.User;
 import com.stars.web.model.enums.UserRoleEnum;
-import com.stars.web.model.vo.LoginUserVo;
-import com.stars.web.model.vo.UserVo;
+import com.stars.web.model.vo.LoginUserVO;
+import com.stars.web.model.vo.UserVO;
 import com.stars.web.service.UserService;
 import com.stars.web.utils.SqlUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -102,7 +102,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @return
      */
     @Override
-    public LoginUserVo userLogin(String userAccount, String userPassword, HttpServletRequest request) {
+    public LoginUserVO userLogin(String userAccount, String userPassword, HttpServletRequest request) {
         // 1、参数校验
         if (StringUtils.isAnyBlank(userAccount, userPassword)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "登录失败，用户账号为空或用户密码为空");
@@ -132,8 +132,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         request.getSession().setAttribute(UserConstant.USER_LOGIN_STATE, user);
 
         // 返回当前登录用户视图
-        LoginUserVo loginUserVo = this.getLoginUserVo(user);
-        return loginUserVo;
+        LoginUserVO loginUserVO = this.getLoginUserVO(user);
+        return loginUserVO;
     }
 
     /**
@@ -153,8 +153,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
 
         // 从数据库查询（追求性能的话可以注释，直接走缓存）
-        Long id = currentUser.getId();
-        currentUser = this.getById(id);
+        Long userId = currentUser.getId();
+        currentUser = this.getById(userId);
         if (currentUser == null) {
             throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
         }
@@ -178,8 +178,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
 
         // 从数据库查询（追求性能的话可以注释，直接走缓存）
-        long id = currentUser.getId();
-        currentUser = this.getById(id);
+        long userId = currentUser.getId();
+        currentUser = this.getById(userId);
         return currentUser;
     }
 
@@ -242,15 +242,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @return
      */
     @Override
-    public LoginUserVo getLoginUserVo(User user) {
+    public LoginUserVO getLoginUserVO(User user) {
         if (user == null) {
             return null;
         }
 
         // 获取当前登录用户视图
-        LoginUserVo loginUserVo = new LoginUserVo();
-        BeanUtils.copyProperties(user, loginUserVo);
-        return loginUserVo;
+        LoginUserVO loginUserVO = new LoginUserVO();
+        BeanUtils.copyProperties(user, loginUserVO);
+        return loginUserVO;
     }
 
     /**
@@ -260,15 +260,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @return
      */
     @Override
-    public UserVo getUserVo(User user) {
+    public UserVO getUserVO(User user) {
         if (user == null) {
             return null;
         }
 
         // 获取用户视图
-        UserVo userVo = new UserVo();
-        BeanUtils.copyProperties(user, userVo);
-        return userVo;
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(user, userVO);
+        return userVO;
     }
 
     /**
@@ -278,14 +278,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @return
      */
     @Override
-    public List<UserVo> getUserVo(List<User> userList) {
+    public List<UserVO> getUserVO(List<User> userList) {
         if (CollUtil.isEmpty(userList)) {
             return new ArrayList<>();
         }
 
         // 获取用户视图列表
-        List<UserVo> userVoList = userList.stream().map(this::getUserVo).collect(Collectors.toList());
-        return userVoList;
+        List<UserVO> userVOList = userList.stream().map(this::getUserVO).collect(Collectors.toList());
+        return userVOList;
     }
 
     /**

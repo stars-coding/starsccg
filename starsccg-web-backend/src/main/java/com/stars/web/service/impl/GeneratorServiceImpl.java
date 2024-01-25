@@ -12,8 +12,8 @@ import com.stars.web.mapper.GeneratorMapper;
 import com.stars.web.model.dto.generator.GeneratorQueryRequest;
 import com.stars.web.model.entity.Generator;
 import com.stars.web.model.entity.User;
-import com.stars.web.model.vo.GeneratorVo;
-import com.stars.web.model.vo.UserVo;
+import com.stars.web.model.vo.GeneratorVO;
+import com.stars.web.model.vo.UserVO;
 import com.stars.web.service.GeneratorService;
 import com.stars.web.service.UserService;
 import com.stars.web.utils.SqlUtils;
@@ -47,52 +47,50 @@ public class GeneratorServiceImpl extends ServiceImpl<GeneratorMapper, Generator
      *
      * @param generator
      * @param add
-     * @param request
      */
     @Override
-    public void validGenerator(Generator generator, boolean add, HttpServletRequest request) {
+    public void validGenerator(Generator generator, boolean add) {
         if (generator == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
 
         // 校验代码生成器属性
-        String generatorName = generator.getGeneratorName();
-        String generatorDescription = generator.getGeneratorDescription();
-        String generatorAuthor = generator.getGeneratorAuthor();
-        String generatorVersion = generator.getGeneratorVersion();
-        String generatorBasePackage = generator.getGeneratorBasePackage();
-        String generatorPicture = generator.getGeneratorPicture();
-        String generatorTags = generator.getGeneratorTags();
+        String name = generator.getName();
+        String description = generator.getDescription();
+        String author = generator.getAuthor();
+        String version = generator.getVersion();
+        String basePackage = generator.getBasePackage();
+        String picture = generator.getPicture();
+        String tags = generator.getTags();
 
         // 创建时，代码生成器属性不能为空
         if (add) {
             // 对于是 null 或 空串 或 空白串，则返回 true
-            boolean condition = StringUtils.isAnyBlank(generatorName, generatorDescription, generatorAuthor,
-                    generatorVersion, generatorBasePackage, generatorPicture, generatorTags);
+            boolean condition = StringUtils.isAnyBlank(name, description, author, version, basePackage, picture, tags);
             ThrowUtils.throwIf(condition, ErrorCode.PARAMS_ERROR);
         }
 
         // 有属性则校验
-        if (StringUtils.isNotBlank(generatorName) && generatorName.length() > 80) {
+        if (StringUtils.isNotBlank(name) && name.length() > 80) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "校验失败，代码生成器名称为空或长度过长");
         }
-        // 数据库中的 generatorDescription 字段类型为 text ，安全起见，取长度 300
-        if (StringUtils.isNotBlank(generatorDescription) && generatorDescription.length() > 300) {
+        // 数据库中的 description 字段类型为 text ，安全起见，取长度 300
+        if (StringUtils.isNotBlank(description) && description.length() > 300) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "校验失败，代码生成器描述为空或长度过长");
         }
-        if (StringUtils.isNotBlank(generatorAuthor) && generatorAuthor.length() > 80) {
+        if (StringUtils.isNotBlank(author) && author.length() > 80) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "校验失败，代码生成器作者为空或长度过长");
         }
-        if (StringUtils.isNotBlank(generatorVersion) && generatorVersion.length() > 80) {
+        if (StringUtils.isNotBlank(version) && version.length() > 80) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "校验失败，代码生成器版本号为空或长度过长");
         }
-        if (StringUtils.isNotBlank(generatorBasePackage) && generatorBasePackage.length() > 255) {
+        if (StringUtils.isNotBlank(basePackage) && basePackage.length() > 255) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "校验失败，代码生成器基础包名为空或长度过长");
         }
-        if (StringUtils.isNotBlank(generatorPicture) && generatorPicture.length() > 255) {
+        if (StringUtils.isNotBlank(picture) && picture.length() > 255) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "校验失败，代码生成器图片路径为空或长度过长");
         }
-        if (StringUtils.isNotBlank(generatorTags) && generatorTags.length() > 1023) {
+        if (StringUtils.isNotBlank(tags) && tags.length() > 1023) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "校验失败，代码生成器标签为空或长度过长");
         }
     }
@@ -101,11 +99,10 @@ public class GeneratorServiceImpl extends ServiceImpl<GeneratorMapper, Generator
      * 获取查询包装类
      *
      * @param generatorQueryRequest
-     * @param request
      * @return
      */
     @Override
-    public QueryWrapper<Generator> getQueryWrapper(GeneratorQueryRequest generatorQueryRequest, HttpServletRequest request) {
+    public QueryWrapper<Generator> getQueryWrapper(GeneratorQueryRequest generatorQueryRequest) {
         QueryWrapper<Generator> queryWrapper = new QueryWrapper<>();
         if (generatorQueryRequest == null) {
             return queryWrapper;
@@ -115,53 +112,51 @@ public class GeneratorServiceImpl extends ServiceImpl<GeneratorMapper, Generator
         Long id = generatorQueryRequest.getId();
         Long notId = generatorQueryRequest.getNotId();
         String searchText = generatorQueryRequest.getSearchText();
-        List<String> generatorTags = generatorQueryRequest.getGeneratorTags();
-        Long generatorUserId = generatorQueryRequest.getGeneratorUserId();
-        String generatorName = generatorQueryRequest.getGeneratorName();
-        String generatorDescription = generatorQueryRequest.getGeneratorDescription();
-        String generatorAuthor = generatorQueryRequest.getGeneratorAuthor();
-        String generatorVersion = generatorQueryRequest.getGeneratorVersion();
-        String generatorBasePackage = generatorQueryRequest.getGeneratorBasePackage();
-        String generatorDistPath = generatorQueryRequest.getGeneratorDistPath();
-        Integer generatorStatus = generatorQueryRequest.getGeneratorStatus();
+        List<String> tags = generatorQueryRequest.getTags();
+        Long userId = generatorQueryRequest.getUserId();
+        String name = generatorQueryRequest.getName();
+        String description = generatorQueryRequest.getDescription();
+        String author = generatorQueryRequest.getAuthor();
+        String version = generatorQueryRequest.getVersion();
+        String basePackage = generatorQueryRequest.getBasePackage();
+        String distPath = generatorQueryRequest.getDistPath();
+        Integer status = generatorQueryRequest.getStatus();
         String sortField = generatorQueryRequest.getSortField();
         String sortOrder = generatorQueryRequest.getSortOrder();
 
         // 拼接查询条件
         // todo 待优化
         if (StringUtils.isNotBlank(searchText)) {
-            queryWrapper.and(
-                    qw -> qw.like("generatorName", searchText)
-                            .or().like("generatorDescription", searchText));
+            queryWrapper.and(qw -> qw.like("name", searchText).or().like("description", searchText));
         }
 
-        queryWrapper.like(StringUtils.isNotBlank(generatorName), "generatorName", generatorName);
-        queryWrapper.like(StringUtils.isNotBlank(generatorDescription), "generatorDescription", generatorDescription);
+        queryWrapper.like(StringUtils.isNotBlank(name), "name", name);
+        queryWrapper.like(StringUtils.isNotBlank(description), "description", description);
 //
-//        if (CollUtil.isNotEmpty(generatorTags)) {
-//            for (String generatorTag : generatorTags) {
-//                queryWrapper.like("generatorTags", "\"" + generatorTag + "\"");
+//        if (CollUtil.isNotEmpty(tags)) {
+//            for (String tag : tags) {
+//                queryWrapper.like("tags", "\"" + tag + "\"");
 //            }
 //        }
 
         // ChatGPT 优化，将标签查询拼接由 AND 改为 OR
-        if (CollUtil.isNotEmpty(generatorTags)) {
+        if (CollUtil.isNotEmpty(tags)) {
             queryWrapper.and(wrapper -> {
-                for (String generatorTag : generatorTags) {
-                    System.out.println("----------------------" + generatorTag);
-                    wrapper.or().like("generatorTags", "%" + generatorTag + "%");
+                for (String tag : tags) {
+                    System.out.println("----------------------" + tag);
+                    wrapper.or().like("tags", "%" + tag + "%");
                 }
             });
         }
 
         queryWrapper.eq(ObjectUtils.isNotEmpty(id), "id", id);
         queryWrapper.ne(ObjectUtils.isNotEmpty(notId), "notId", notId);
-        queryWrapper.eq(ObjectUtils.isNotEmpty(generatorUserId), "generatorUserId", generatorUserId);
-        queryWrapper.eq(ObjectUtils.isNotEmpty(generatorAuthor), "generatorAuthor", generatorAuthor);
-        queryWrapper.eq(ObjectUtils.isNotEmpty(generatorVersion), "generatorVersion", generatorVersion);
-        queryWrapper.eq(ObjectUtils.isNotEmpty(generatorBasePackage), "generatorBasePackage", generatorBasePackage);
-        queryWrapper.eq(ObjectUtils.isNotEmpty(generatorDistPath), "generatorDistPath", generatorDistPath);
-        queryWrapper.eq(ObjectUtils.isNotEmpty(generatorStatus), "generatorStatus", generatorStatus);
+        queryWrapper.eq(ObjectUtils.isNotEmpty(userId), "userId", userId);
+        queryWrapper.eq(StringUtils.isNotBlank(author), "author", author);
+        queryWrapper.eq(StringUtils.isNotBlank(version), "version", version);
+        queryWrapper.eq(StringUtils.isNotBlank(basePackage), "basePackage", basePackage);
+        queryWrapper.eq(StringUtils.isNotBlank(distPath), "distPath", distPath);
+        queryWrapper.eq(ObjectUtils.isNotEmpty(status), "status", status);
         queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC), sortField);
 
         return queryWrapper;
@@ -175,19 +170,19 @@ public class GeneratorServiceImpl extends ServiceImpl<GeneratorMapper, Generator
      * @return
      */
     @Override
-    public GeneratorVo getGeneratorVo(Generator generator, HttpServletRequest request) {
-        GeneratorVo generatorVo = GeneratorVo.objToVo(generator);
+    public GeneratorVO getGeneratorVO(Generator generator, HttpServletRequest request) {
+        GeneratorVO generatorVO = GeneratorVO.objToVo(generator);
 
         // 关联查询用户信息，为代码生成器视图中的用户视图属性赋值
-        Long generatorUserId = generator.getGeneratorUserId();
+        Long userId = generator.getUserId();
         User user = null;
-        if (generatorUserId != null && generatorUserId > 0) {
-            user = this.userService.getById(generatorUserId);
+        if (userId != null && userId > 0) {
+            user = this.userService.getById(userId);
         }
-        UserVo userVo = this.userService.getUserVo(user);
-        generatorVo.setUserVo(userVo);
+        UserVO userVO = this.userService.getUserVO(user);
+        generatorVO.setUser(userVO);
 
-        return generatorVo;
+        return generatorVO;
     }
 
     /**
@@ -198,37 +193,31 @@ public class GeneratorServiceImpl extends ServiceImpl<GeneratorMapper, Generator
      * @return
      */
     @Override
-    public Page<GeneratorVo> getGeneratorVoPage(Page<Generator> generatorPage, HttpServletRequest request) {
+    public Page<GeneratorVO> getGeneratorVOPage(Page<Generator> generatorPage, HttpServletRequest request) {
         List<Generator> generatorList = generatorPage.getRecords();
-        Page<GeneratorVo> generatorVoPage =
-                new Page<>(generatorPage.getCurrent(), generatorPage.getSize(), generatorPage.getTotal());
+        Page<GeneratorVO> generatorVOPage = new Page<>(generatorPage.getCurrent(), generatorPage.getSize(), generatorPage.getTotal());
         if (CollUtil.isEmpty(generatorList)) {
-            return generatorVoPage;
+            return generatorVOPage;
         }
 
         // 关联查询用户信息，为代码生成器视图中的用户视图属性赋值
-        Set<Long> generatorUserIdSet = generatorList.stream()
-                .map(Generator::getGeneratorUserId)
-                .collect(Collectors.toSet());
-        Map<Long, List<User>> generatorUserIdUserListMap = this.userService.listByIds(generatorUserIdSet)
-                .stream()
+        Set<Long> userIdSet = generatorList.stream().map(Generator::getUserId).collect(Collectors.toSet());
+        Map<Long, List<User>> userIdUserListMap = this.userService.listByIds(userIdSet).stream()
                 .collect(Collectors.groupingBy(User::getId));
 
         // 填充信息
-        List<GeneratorVo> generatorVoList = generatorList.stream()
-                .map(generator -> {
-                    GeneratorVo generatorVo = GeneratorVo.objToVo(generator);
-                    Long generatorUserId = generator.getGeneratorUserId();
-                    User user = null;
-                    if (generatorUserIdUserListMap.containsKey(generatorUserId)) {
-                        user = generatorUserIdUserListMap.get(generatorUserId).get(0);
-                    }
-                    generatorVo.setUserVo(this.userService.getUserVo(user));
-                    return generatorVo;
-                })
-                .collect(Collectors.toList());
-        generatorVoPage.setRecords(generatorVoList);
+        List<GeneratorVO> generatorVOList = generatorList.stream().map(generator -> {
+            GeneratorVO generatorVO = GeneratorVO.objToVo(generator);
+            Long userId = generator.getUserId();
+            User user = null;
+            if (userIdUserListMap.containsKey(userId)) {
+                user = userIdUserListMap.get(userId).get(0);
+            }
+            generatorVO.setUser(this.userService.getUserVO(user));
+            return generatorVO;
+        }).collect(Collectors.toList());
+        generatorVOPage.setRecords(generatorVOList);
 
-        return generatorVoPage;
+        return generatorVOPage;
     }
 }

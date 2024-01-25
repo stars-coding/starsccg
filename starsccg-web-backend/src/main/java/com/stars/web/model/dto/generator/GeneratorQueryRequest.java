@@ -35,52 +35,52 @@ public class GeneratorQueryRequest extends PageRequest implements Serializable {
     /**
      * 代码生成器标签列表
      */
-    private List<String> generatorTags;
+    private List<String> tags;
 
     /**
      * 至少有一个代码生成器标签
      */
-    private List<String> orGeneratorTags;
+    private List<String> orTags;
 
     /**
      * 代码生成器添加人的用户主键
      */
-    private Long generatorUserId;
+    private Long userId;
 
     /**
      * 代码生成器名称
      */
-    private String generatorName;
+    private String name;
 
     /**
      * 代码生成器描述
      */
-    private String generatorDescription;
+    private String description;
 
     /**
      * 代码生成器作者
      */
-    private String generatorAuthor;
+    private String author;
 
     /**
      * 代码生成器版本
      */
-    private String generatorVersion;
+    private String version;
 
     /**
      * 代码生成器基础包
      */
-    private String generatorBasePackage;
+    private String basePackage;
 
     /**
      * 代码生成器产物路径
      */
-    private String generatorDistPath;
+    private String distPath;
 
     /**
      * 代码生成器状态
      */
-    private Integer generatorStatus;
+    private Integer status;
 
     private static final long serialVersionUID = 1L;
 }

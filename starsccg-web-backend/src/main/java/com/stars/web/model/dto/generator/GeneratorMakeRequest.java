@@ -16,6 +16,11 @@ public class GeneratorMakeRequest implements Serializable {
 
     /**
      * 元信息
+     *
+     * condition: "test"
+     * groupKey: "分组主键"
+     * groupName: "分组名称"
+     * type: "分组"
      */
     private Meta meta;
 

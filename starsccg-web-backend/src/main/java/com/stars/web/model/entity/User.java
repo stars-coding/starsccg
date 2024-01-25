@@ -66,7 +66,7 @@ public class User implements Serializable {
      * 是否删除(0-未删, 1-已删)
      */
     @TableLogic
-    private Byte isDelete;
+    private Integer isDelete;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

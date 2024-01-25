@@ -50,6 +50,9 @@ public abstract class GenerateTemplate {
      * @throws InterruptedException
      */
     public void doGenerate(Meta meta, String outputPath) throws IOException, TemplateException, InterruptedException {
+        // 输出路径格式标准化
+        outputPath = outputPath.replaceAll("\\\\", "/");
+
         // 目录为空则创建目录
         if (!FileUtil.exist(outputPath)) {
             FileUtil.mkdir(outputPath);
@@ -96,9 +99,6 @@ public abstract class GenerateTemplate {
      * @throws TemplateException
      */
     protected void generateCode(Meta meta, String outputPath) throws IOException, TemplateException {
-        // 输出路径格式标准化
-        outputPath = outputPath.replaceAll("\\\\", "/");
-
         // 读取 resources 目录
         String inputResourcePath = "";
 
@@ -106,7 +106,6 @@ public abstract class GenerateTemplate {
         // com.stars
         String outputBasePackage = meta.getBasePackage();
         // com/stars
-//        String outputBasePackagePath = outputBasePackage.replaceAll(".", "/");
         String outputBasePackagePath = StrUtil.join("/", StrUtil.split(outputBasePackage, "."));
         // generated/src/main/java/com/stars
         String outputBaseJavaPackagePath = outputPath + "/" + "src/main/java/" + outputBasePackagePath;
@@ -222,7 +221,9 @@ public abstract class GenerateTemplate {
         String distOutputPath = outputPath + "-dist";
         // 拷贝 jar 包
         String targetAbsolutePath = distOutputPath + "/" + "target";
+        // 创建目录，会删除原有目录
         FileUtil.mkdir(targetAbsolutePath);
+        // 拷贝 jar 包
         String jarAbsolutePath = outputPath + "/" + jarPath;
         FileUtil.copy(jarAbsolutePath, targetAbsolutePath, true);
         // 拷贝脚本文件

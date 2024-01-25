@@ -1,5 +1,8 @@
 package com.stars.maker.generator;
 
+import com.stars.maker.util.os.OsUtil;
+import com.stars.maker.util.os.enums.OsTypeEnum;
+
 import java.io.*;
 import java.util.Map;
 
@@ -19,11 +22,21 @@ public class JarGenerator {
      * @throws InterruptedException
      */
     public static void doGenerate(String projectDir) throws IOException, InterruptedException {
+        // 获取当前操作系统类型
+        String osType = OsUtil.OS_TYPE;
+
+        // 声明 Maven 命令
+        String mavenCommand = null;
+
         // 清理之前构建的 jar 包再执行打包
         // 注意不同操作系统，执行的命令不同
-        String winMavenCommand = "mvn.cmd clean package -DskipTests=true";
-        String otherMavenCommand = "mvn clean package -DskipTests=true";
-        String mavenCommand = winMavenCommand;
+        if (OsTypeEnum.WINDOWS.getValue().equals(osType)) {
+            mavenCommand = "mvn.cmd clean package -DskipTests=true";
+        } else if (OsTypeEnum.LINUX.getValue().equals(osType)) {
+            mavenCommand = "mvn clean package -DskipTests=true";
+        } else {
+            mavenCommand = "mvn clean package -DskipTests=true";
+        }
 
         // 依据空格拆分命名，必须
         ProcessBuilder processBuilder = new ProcessBuilder(mavenCommand.split(" "));

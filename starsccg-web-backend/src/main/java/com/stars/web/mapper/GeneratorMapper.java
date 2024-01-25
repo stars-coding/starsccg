@@ -14,6 +14,6 @@ import java.util.List;
  */
 public interface GeneratorMapper extends BaseMapper<Generator> {
 
-    @Select("SELECT id, generatorDistPath FROM generator WHERE isDelete = 1")
+    @Select("SELECT id, distPath FROM generator WHERE isDelete = 1")
     List<Generator> listDeletedGenerator();
 }

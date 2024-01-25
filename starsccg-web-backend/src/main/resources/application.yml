@@ -2,44 +2,7 @@ spring:
   profiles:
     default: dev
 
-## 公共配置文件
-## @author stars
-#spring:
-#  application:
-#    name: starsccg-web-backend
-#  # 默认 dev 环境
-#    profiles:
-#      active: dev
-#  # 支持 swagger3
-#  mvc:
-#    pathmatch:
-#      matching-strategy: ant_path_matcher
-#  # session 配置
-#  session:
-#    # todo 取消注释开启分布式 session（须先配置 Redis）
-#    # store-type: redis
-#    # 30 天过期
-#    timeout: 2592000
-#  # 数据库配置
-#  # todo 需替换配置
-#  datasource:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://localhost:3306/starsccg
-#    username: root
-#    password: 123456
-#  # Redis 配置
-#  # todo 需替换配置，然后取消注释
-#  #  redis:
-#  #    database: 1
-#  #    host: localhost
-#  #    port: 6379
-#  #    timeout: 5000
-#  #    password: 123456
-#  # 文件上传
-#  servlet:
-#    multipart:
-#      # 大小限制
-#      max-file-size: 10MB
+## 开发环境 配置
 #server:
 #  address: 0.0.0.0
 #  port: 29000
@@ -49,6 +12,59 @@ spring:
 #    session:
 #      cookie:
 #        max-age: 2592000
+#
+## Spring 配置
+#spring:
+#  application:
+#    name: starsccg-web-backend
+#  # 默认 dev 环境
+#  #  profiles:
+#  #    active: dev
+#  config:
+#    activate:
+#      on-profile:
+#        - dev
+#  # 文件上传
+#  servlet:
+#    multipart:
+#      # 大小限制
+#      max-file-size: 100MB
+#      max-request-size: 100MB
+#  # Tomcat 服务器
+#  tomcat:
+#    max-connections: 10000
+#    threads:
+#      max: 5000
+#    accept-count: 1000
+#  # 支持 Swagger3
+#  mvc:
+#    pathmatch:
+#      matching-strategy: ant_path_matcher
+#  # Session 配置
+#  session:
+#    # todo 取消注释开启分布式 session（须先配置 Redis）
+#    # store-type: redis
+#    # 30 天过期
+#    timeout: 2592000
+#  # DataSource 配置
+#  # todo 需替换配置
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    # 开发环境-本地地址-MySQL地址
+#    url: jdbc:mysql://localhost:3306/starsccg
+#    username:
+#    password:
+#  # Redis 配置
+#  # todo 需替换配置，然后取消注释
+#  redis:
+#    # 开发环境-腾讯云服务器-Redis地址
+#    host: 123.207.1.38
+#    port: 6379
+#    database: 1
+#    timeout: 5000
+#    password:
+#
+## MybatisPlus 配置
 #mybatis-plus:
 #  configuration:
 #    map-underscore-to-camel-case: false
@@ -58,22 +74,46 @@ spring:
 #      logic-delete-field: isDelete # 全局逻辑删除的实体字段名
 #      logic-delete-value: 1 # 逻辑已删除值（默认为 1）
 #      logic-not-delete-value: 0 # 逻辑未删除值（默认为 0）
-## 对象存储
-## todo 需替换配置
-#cos:
-#  client:
-#    accessKey: xxx
-#    secretKey: xxx
-#    region: xxx
-#    bucket: xxx
-## 接口文档配置
+#
+## 接口文档 配置
 #knife4j:
 #  enable: true
 #  openapi:
 #    title: "接口文档"
-#    version: 1.0
+#    version: 1.0.0
 #    group:
 #      default:
 #        api-rule: package
 #        api-rule-resources:
 #          - com.stars.web.controller
+#
+## 对象存储 配置
+## todo 需替换配置
+#cos:
+#  client:
+#    accessKey:
+#    secretKey:
+#    region:
+#    bucket:
+#
+## XXL-JOB 配置
+## todo 需替换配置
+#xxl:
+#  job:
+#    admin:
+#      # xxl-job admin address list, such as "http://address" or "http://address01,http://address02"
+#      addresses: http://127.0.0.1:8080/xxl-job-admin
+#    # xxl-job, access token
+#    accessToken: default_token
+#    executor:
+#      # xxl-job executor appname
+#      appname: starsccg-web-backend
+#      # xxl-job executor registry-address: default use address to registry , otherwise use ip:port if address is null
+#      address:
+#      # xxl-job executor server-info
+#      ip:
+#      port: 9999
+#      # xxl-job executor log-path
+#      logpath: logs/jobhandler
+#      # xxl-job executor log-retention-days
+#      logretentiondays: 30

@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.stars.web.model.dto.generator.GeneratorQueryRequest;
 import com.stars.web.model.entity.Generator;
-import com.stars.web.model.vo.GeneratorVo;
+import com.stars.web.model.vo.GeneratorVO;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -22,18 +22,16 @@ public interface GeneratorService extends IService<Generator> {
      *
      * @param generator
      * @param add
-     * @param request
      */
-    void validGenerator(Generator generator, boolean add, HttpServletRequest request);
+    void validGenerator(Generator generator, boolean add);
 
     /**
      * 获取查询包装类
      *
      * @param generatorQueryRequest
-     * @param request
      * @return
      */
-    QueryWrapper<Generator> getQueryWrapper(GeneratorQueryRequest generatorQueryRequest, HttpServletRequest request);
+    QueryWrapper<Generator> getQueryWrapper(GeneratorQueryRequest generatorQueryRequest);
 
     /**
      * 获取代码生成器视图
@@ -42,7 +40,7 @@ public interface GeneratorService extends IService<Generator> {
      * @param request
      * @return
      */
-    GeneratorVo getGeneratorVo(Generator generator, HttpServletRequest request);
+    GeneratorVO getGeneratorVO(Generator generator, HttpServletRequest request);
 
     /**
      * 分页获取代码生成器视图
@@ -51,5 +49,5 @@ public interface GeneratorService extends IService<Generator> {
      * @param request
      * @return
      */
-    Page<GeneratorVo> getGeneratorVoPage(Page<Generator> generatorPage, HttpServletRequest request);
+    Page<GeneratorVO> getGeneratorVOPage(Page<Generator> generatorPage, HttpServletRequest request);
 }

@@ -25,62 +25,62 @@ public class Generator implements Serializable {
     /**
      * 代码生成器名称
      */
-    private String generatorName;
+    private String name;
 
     /**
      * 代码生成器描述
      */
-    private String generatorDescription;
+    private String description;
 
     /**
      * 代码生成器作者
      */
-    private String generatorAuthor;
+    private String author;
 
     /**
      * 代码生成器版本
      */
-    private String generatorVersion;
+    private String version;
 
     /**
      * 代码生成器基础包
      */
-    private String generatorBasePackage;
+    private String basePackage;
 
     /**
      * 代码生成器图片
      */
-    private String generatorPicture;
+    private String picture;
 
     /**
      * 代码生成器标签列表(JSON数组)
      */
-    private String generatorTags;
+    private String tags;
 
     /**
      * 代码生成器文件配置(JSON字符串)
      */
-    private String generatorFileConfig;
+    private String fileConfig;
 
     /**
      * 代码生成器模型配置(JSON字符串)
      */
-    private String generatorModelConfig;
+    private String modelConfig;
 
     /**
      * 代码生成器产物路径
      */
-    private String generatorDistPath;
+    private String distPath;
 
     /**
      * 代码生成器状态
      */
-    private Integer generatorStatus;
+    private Integer status;
 
     /**
      * 代码生成器添加人的用户主键
      */
-    private Long generatorUserId;
+    private Long userId;
 
     /**
      * 创建时间

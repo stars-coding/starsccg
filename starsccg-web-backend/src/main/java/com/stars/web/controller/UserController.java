@@ -11,8 +11,8 @@ import com.stars.web.exception.BusinessException;
 import com.stars.web.exception.ThrowUtils;
 import com.stars.web.model.dto.user.*;
 import com.stars.web.model.entity.User;
-import com.stars.web.model.vo.LoginUserVo;
-import com.stars.web.model.vo.UserVo;
+import com.stars.web.model.vo.LoginUserVO;
+import com.stars.web.model.vo.UserVO;
 import com.stars.web.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -69,7 +69,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/login")
-    public BaseResponse<LoginUserVo> userLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
+    public BaseResponse<LoginUserVO> userLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
         if (userLoginRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -78,8 +78,8 @@ public class UserController {
         if (StringUtils.isAnyBlank(userAccount, userPassword)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        LoginUserVo loginUserVo = userService.userLogin(userAccount, userPassword, request);
-        return ResultUtils.success(loginUserVo);
+        LoginUserVO loginUserVO = userService.userLogin(userAccount, userPassword, request);
+        return ResultUtils.success(loginUserVO);
     }
 
     /**
@@ -104,9 +104,9 @@ public class UserController {
      * @return
      */
     @GetMapping("/get/login")
-    public BaseResponse<LoginUserVo> getLoginUser(HttpServletRequest request) {
+    public BaseResponse<LoginUserVO> getLoginUser(HttpServletRequest request) {
         User user = userService.getLoginUser(request);
-        return ResultUtils.success(userService.getLoginUserVo(user));
+        return ResultUtils.success(userService.getLoginUserVO(user));
     }
 
     /**
@@ -196,10 +196,10 @@ public class UserController {
      * @return
      */
     @GetMapping("/get/vo")
-    public BaseResponse<UserVo> getUserVoById(long id, HttpServletRequest request) {
+    public BaseResponse<UserVO> getUserVOById(long id, HttpServletRequest request) {
         BaseResponse<User> response = getUserById(id, request);
         User user = response.getData();
-        return ResultUtils.success(userService.getUserVo(user));
+        return ResultUtils.success(userService.getUserVO(user));
     }
 
     /**
@@ -228,7 +228,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/list/page/vo")
-    public BaseResponse<Page<UserVo>> listUserVoByPage(@RequestBody UserQueryRequest userQueryRequest,
+    public BaseResponse<Page<UserVO>> listUserVOByPage(@RequestBody UserQueryRequest userQueryRequest,
                                                        HttpServletRequest request) {
         if (userQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -239,10 +239,10 @@ public class UserController {
         ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
         Page<User> userPage = userService.page(new Page<>(current, size),
                 userService.getQueryWrapper(userQueryRequest));
-        Page<UserVo> userVoPage = new Page<>(current, size, userPage.getTotal());
-        List<UserVo> userVo = userService.getUserVo(userPage.getRecords());
-        userVoPage.setRecords(userVo);
-        return ResultUtils.success(userVoPage);
+        Page<UserVO> userVOPage = new Page<>(current, size, userPage.getTotal());
+        List<UserVO> userVO = userService.getUserVO(userPage.getRecords());
+        userVOPage.setRecords(userVO);
+        return ResultUtils.success(userVOPage);
     }
 
     /**

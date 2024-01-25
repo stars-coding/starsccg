@@ -42,10 +42,10 @@ public class ClearCosJobHandler {
         this.cosManager.deleteDir("/generator_make_template/");
         // 2. 已删除的代码生成器对应的产物包文件（generator_dist）
         List<Generator> generatorList = this.generatorMapper.listDeletedGenerator();
-        List<String> keyList = generatorList.stream().map(Generator::getGeneratorDistPath)
+        List<String> keyList = generatorList.stream().map(Generator::getDistPath)
                 .filter(StrUtil::isNotBlank)
                 // 移除 '/' 前缀
-                .map(generatorDistPath -> generatorDistPath.substring(1))
+                .map(distPath -> distPath.substring(1))
                 .collect(Collectors.toList());
         this.cosManager.deleteObjects(keyList);
         this.log.info("clearCosJobHandler end");

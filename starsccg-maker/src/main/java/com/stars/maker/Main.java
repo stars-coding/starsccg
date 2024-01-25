@@ -1,7 +1,6 @@
 package com.stars.maker;
 
 import com.stars.maker.generator.main.GenerateTemplate;
-import com.stars.maker.generator.main.MainGenerator;
 import com.stars.maker.generator.main.ZipGenerator;
 import freemarker.template.TemplateException;
 

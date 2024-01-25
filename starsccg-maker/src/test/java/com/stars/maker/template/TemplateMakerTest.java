@@ -1,11 +1,14 @@
 package com.stars.maker.template;
 
 import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
+import cn.hutool.system.SystemUtil;
 import com.stars.maker.meta.Meta;
 import com.stars.maker.template.model.TemplateMakerConfig;
 import com.stars.maker.template.model.TemplateMakerFileConfig;
 import com.stars.maker.template.model.TemplateMakerModelConfig;
+import com.stars.maker.util.os.enums.OsTypeEnum;
 import org.junit.Test;
 
 import java.io.File;
@@ -19,6 +22,18 @@ import java.util.List;
  * @version 1.0.0
  */
 public class TemplateMakerTest {
+    /**
+     * 普通测试
+     */
+    @Test
+    public void test01() {
+        String osName = System.getProperty("os.name");
+        System.out.println("Operating System: " + osName);
+        System.out.println("Operating System Name: " + SystemUtil.get(SystemUtil.OS_NAME));
+        if (StrUtil.containsIgnoreCase(osName, OsTypeEnum.WINDOWS.getValue())) {
+            System.out.println(true);
+        }
+    }
 
     /**
      * 测试同配置多次生成时，强制变为静态生成

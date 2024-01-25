@@ -51,7 +51,9 @@ public class MetaManager {
 
         // 转化为元信息对象
         Meta newMeta = JSONUtil.toBean(metaJson, Meta.class);
-        // todo 校验和处理默认值
+
+        // 校验和处理默认值
+//        MetaValidator.doValidAndFill(newMeta);
         return newMeta;
     }
 }

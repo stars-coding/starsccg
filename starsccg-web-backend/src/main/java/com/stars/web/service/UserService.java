@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.stars.web.model.dto.user.UserQueryRequest;
 import com.stars.web.model.entity.User;
-import com.stars.web.model.vo.LoginUserVo;
-import com.stars.web.model.vo.UserVo;
+import com.stars.web.model.vo.LoginUserVO;
+import com.stars.web.model.vo.UserVO;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -36,7 +36,7 @@ public interface UserService extends IService<User> {
      * @param request
      * @return
      */
-    LoginUserVo userLogin(String userAccount, String userPassword, HttpServletRequest request);
+    LoginUserVO userLogin(String userAccount, String userPassword, HttpServletRequest request);
 
     /**
      * 获取当前登录用户
@@ -84,7 +84,7 @@ public interface UserService extends IService<User> {
      * @param user
      * @return
      */
-    LoginUserVo getLoginUserVo(User user);
+    LoginUserVO getLoginUserVO(User user);
 
     /**
      * 获取用户视图
@@ -92,7 +92,7 @@ public interface UserService extends IService<User> {
      * @param user
      * @return
      */
-    UserVo getUserVo(User user);
+    UserVO getUserVO(User user);
 
     /**
      * 获取用户视图列表
@@ -100,7 +100,7 @@ public interface UserService extends IService<User> {
      * @param userList
      * @return
      */
-    List<UserVo> getUserVo(List<User> userList);
+    List<UserVO> getUserVO(List<User> userList);
 
     /**
      * 获取查询包装器
